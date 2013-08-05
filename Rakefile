@@ -248,7 +248,7 @@ desc "deploy public directory to github pages"
 multitask :push do
   puts "## Deploying branch to Github Pages "
   puts "## Pulling any updates from Github Pages "
-  cd "#{deploy_dir}" do 
+  cd "#{deploy_dir}" do
     system "git pull"
   end
   (Dir["#{deploy_dir}/*"]).each { |f| rm_rf(f) }
@@ -319,9 +319,9 @@ task :setup_github_pages, :repo do |t, args|
   end
   branch = (repo_url.match(/\/[\w-]+\.github\.(?:io|com)/).nil?) ? 'gh-pages' : 'master'
   project = (branch == 'gh-pages') ? repo_url.match(/\/([^\.]+)/)[1] : ''
-  unless (`git remote -v` =~ /origin.+?octopress(?:\.git)?/).nil?
+  unless (`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
     # If octopress is still the origin remote (from cloning) rename it to octopress
-    system "git remote rename origin octopress"
+    system "git remote rename origin octostrap"
     if branch == 'master'
       # If this is a user/organization pages repository, add the correct origin remote
       # and checkout the source branch for committing changes to the blog source.
@@ -361,6 +361,31 @@ task :setup_github_pages, :repo do |t, args|
     end
   end
   puts "\n---\n## Now you can deploy to #{url} with `rake deploy` ##"
+end
+
+desc "Change git config to take ownership of your own OctoStrap site"
+task :takeover, :repo do |t, args|
+  if args.repo
+    repo_url = args.repo
+  else
+    puts "Enter the read/write url for your repository"
+    puts "(For example, 'git@github.com:your_username/your_repo.git')"
+    puts "           or 'https://github.com/your_username/your_repo.git')"
+    repo_url = get_stdin("Repository url: ")
+  end
+  branch = (`git rev-parse --abbrev-ref HEAD`).strip
+  unless (`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
+    # If octostrap is still the origin remote (from cloning) rename it to octostrap
+    puts "Renaming remote origin to octostrap"
+    system "git remote rename origin octostrap"
+    # Add the correct origin remote for user's repository URL
+    # and set new origin as master branch remote
+    system "git remote add origin #{repo_url}"
+    puts "Added remote #{repo_url} as origin"
+    system "git config branch.#{branch}.remote origin"
+    puts "Set origin as default remote"
+  end
+  puts "\n---\n## Now you can push to your repository at #{url} with `git push -u origin master` ##"
 end
 
 def ok_failed(condition)
