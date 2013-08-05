@@ -257,9 +257,7 @@ multitask :push do
   cp_r "#{public_dir}/.", deploy_dir
   cd "#{deploy_dir}" do
     # add .nojekyll file to prevent github jekyll processing
-    unless File.exists?('./.nojekyll') do
-      File.open('./.nojekyll', 'w') { |file| file.write('') }
-    end
+    File.open('./.nojekyll', 'w') { |file| file.write('') } unless File.exists?('./.nojekyll')
     system "git add -A"
     puts "\n## Commiting: Site updated at #{Time.now.utc}"
     message = "Site updated at #{Time.now.utc}"
