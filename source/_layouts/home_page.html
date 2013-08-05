@@ -1,0 +1,8 @@
+---
+layout: default
+---
+<div class="jumbotron">
+  {% include jumbotron.html %}
+</div>
+
+{{ content | expand_urls: root_url }}
