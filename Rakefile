@@ -383,7 +383,7 @@ task :takeover, :repo do |t, args|
   branch = (`git rev-parse --abbrev-ref HEAD`).strip
   unless (`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
     # If octostrap is still the origin remote (from cloning) rename it to octostrap
-    puts "Renaming remote origin to octostrap"
+    puts "\nRenaming remote origin to octostrap"
     system "git remote rename origin octostrap"
     # Add the correct origin remote for user's repository URL
     # and set new origin as master branch remote
