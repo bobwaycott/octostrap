@@ -384,8 +384,15 @@ task :takeover, :repo do |t, args|
     puts "Added remote #{repo_url} as origin"
     system "git config branch.#{branch}.remote origin"
     puts "Set origin as default remote"
+    puts "I can go ahead and push this to origin if you'd like"
+    permission = get_stdin("Shall I push to your repo? (y/n) ")
+    if permission =~ /\Ay\Z/i
+      system "git push -u origin #{branch}"
+    else
+      puts "Okay, we'll skip that for now"
+    end
   end
-  puts "\n---\n## Now you can push to your repository at #{url} with `git push -u origin master` ##"
+  puts "\n---\n## Takeover complete! ##"
 end
 
 def ok_failed(condition)
