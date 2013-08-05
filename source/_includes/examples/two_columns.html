@@ -1,0 +1,13 @@
+<div class="col-lg-6">
+  {% for item in page.column_one %}
+    <h4>{{ item.heading }}</h4>
+    <p>{{ item.text | markdownify }}</p>
+  {% endfor %}
+</div>
+
+<div class="col-lg-6">
+  {% for item in page.column_two %}
+    <h4>{{ item.heading }}</h4>
+    <p>{{ item.text | markdownify }}</p>
+  {% endfor %}
+</div>

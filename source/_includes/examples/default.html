@@ -1,0 +1,19 @@
+<body>
+
+  <div class="container">
+    <div class="header">
+      {% include header.html %}
+    </div>
+
+    <div class="row marketing">
+      {{ content | expand_urls: root_url }}
+    </div>
+
+    <div class="footer">
+      {% include footer.html %}
+    </div>
+
+  </div> <!-- /container -->
+
+</body>
+</html>

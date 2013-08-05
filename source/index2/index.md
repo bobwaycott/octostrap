@@ -7,9 +7,9 @@ title: Home Page
 <h4>Easy</h4>
 
 <p>
-  Seriously. Clone the repo.
-  <code>bundle install</code>
-  <code>rake preview</code>
+  <code>git clone</code>.
+  <code>bundle install</code>.
+  <code>rake preview</code>.
 </p>
 
 <h4>Octopress</h4>
