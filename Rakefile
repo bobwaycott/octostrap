@@ -311,7 +311,7 @@ task :setup_github_pages, :repo do |t, args|
     puts "Enter the read/write url for your repository"
     puts "(For example, 'git@github.com:your_username/your_username.github.io')"
     puts "           or 'https://github.com/your_username/your_username.github.io')"
-    repo_url = get_stdin("Repository url: ")
+    repo_url = get_stdin("\nRepository url: ")
   end
   branch = (repo_url.match(/\/[\w-]+\.github\.(?:io|com)/).nil?) ? 'gh-pages' : 'master'
   protocol = (repo_url.match(/(^git)@/).nil?) ? 'https' : 'git'
@@ -328,7 +328,7 @@ task :setup_github_pages, :repo do |t, args|
     if branch == 'master'
       # If this is a user/organization pages repository, add the correct origin remote
       # and checkout the source branch for committing changes to the blog source.
-      system "git remote add origin #{repo_url}"
+      system "\ngit remote add origin #{repo_url}"
       puts "Added remote #{repo_url} as origin"
       system "git config branch.master.remote origin"
       puts "Set origin as default remote"
