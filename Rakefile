@@ -378,7 +378,7 @@ task :takeover, :repo do |t, args|
     puts "Enter the read/write url for your repository"
     puts "(For example, 'git@github.com:your_username/your_repo.git')"
     puts "           or 'https://github.com/your_username/your_repo.git')"
-    repo_url = get_stdin("Repository url: ")
+    repo_url = get_stdin("\nRepository url: ")
   end
   branch = (`git rev-parse --abbrev-ref HEAD`).strip
   unless (`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
