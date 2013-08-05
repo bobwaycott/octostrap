@@ -391,13 +391,14 @@ task :takeover, :repo do |t, args|
     puts "Added remote #{repo_url} as origin"
     system "git config branch.#{branch}.remote origin"
     puts "Set origin as default remote"
-    puts "I can go ahead and push this to origin if you'd like"
+    puts "\nI can go ahead and push this to origin if you'd like"
     puts "NOTE: You should probably only do this with a bare repository"
-    permission = get_stdin("Shall I push to your repo? (y/n) ")
+    permission = get_stdin("\nShall I push to your repo? (y/n) ")
     if permission =~ /\Ay\Z/i
+      puts "\n Pushing to your repo ...\n"
       system "git push -u origin #{branch}"
     else
-      puts "Okay, we'll skip that for now"
+      puts "\nOkay, we'll skip that for now"
     end
   end
   puts "\n---\n## Takeover complete! ##"
