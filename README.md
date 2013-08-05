@@ -33,7 +33,9 @@ $ rake preview
 
 Visit `http://localhost:4000/` in your browser. See Bootstrap. Shed tears (of joy).
 
-Of course, there's a few other things you can do. Let's see the **Takeover** example.
+**Want some help setting up your own Github repo?**
+
+Let's see the **Takeover** example.
 
 ## Takeover: The Helpful Guide to Getting Started (4 commands)
 
@@ -97,7 +99,9 @@ $ rake preview
 
 Visit `http://localhost:4000/` in your browser. See Bootstrap. Shed tears (of joy).
 
-Of course, you might just want to go ahead and setup Github Pages deployment while you're at it. Let's see the **Takeover + Github Pages** example.
+**Takeover? Got it. But what about Github Pages?**
+
+Alright, let's setup Github Pages deployment while you're at it. Let's see the **Takeover + Github Pages** example.
 
 ## Takeover+Github Pages: The Super Helpful Guide to Getting Started (5 commands)
 
@@ -114,8 +118,6 @@ $ cd your_project_dir
 $ bundle install
 ```
 
-One of the additions OctoStrap adds to vanilla Octopress is its `takeover` task. 
-
 **Takeover**
 
 ```
@@ -131,6 +133,16 @@ $ rake setup_github_pages
 Just give it your Github repo, same as you did with `takeover`, and let it do its thing.
 
 **Done! Seriously. That is all.**
+
+Don't believe it?
+
+```
+$ rake gen_deploy
+```
+
+Watch as your OctoStrap site is uploaded to Github before your eyes. Wahoo.
+
+(*Disclaimer: Github can take up to 10 minutes to register your new site before you'll see it. But trust us. This works.*)
 
 **Time for a preview?**
 
