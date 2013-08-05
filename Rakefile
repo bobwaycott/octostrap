@@ -392,7 +392,7 @@ task :takeover, :repo do |t, args|
     system "git config branch.#{branch}.remote origin"
     puts "Set origin as default remote"
     puts "\nI can go ahead and push this to origin if you'd like"
-    puts "NOTE: You should probably only do this with a bare repository"
+    puts "NOTE: You should probably only do this with a bare repository and an internet connection"
     permission = get_stdin("\nShall I push to your repo? (y/n) ")
     if permission =~ /\Ay\Z/i
       puts "\n Pushing to your repo ...\n"
