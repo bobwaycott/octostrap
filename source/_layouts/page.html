@@ -2,41 +2,27 @@
 layout: default
 ---
 
-<div>
-<article role="article">
-  {% if page.title %}
-  <header>
-    <h1 class="entry-title">{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}</h1>
-    {% if page.date %}<p class="meta">{% include post/date.html %}{{ time }}</p>{% endif %}
-  </header>
-  {% endif %}
-  {{ content }}
-  {% unless page.footer == false %}
-    <footer>
-      {% if page.date or page.author %}<p class="meta">
-        {% if page.author %}{% include post/author.html %}{% endif %}
-        {% include post/date.html %}{% if updated %}{{ updated }}{% else %}{{ time }}{% endif %}
-        {% if page.categories %}{% include post/categories.html %}{% endif %}
-      </p>{% endif %}
-      {% unless page.sharing == false %}
-        {% include post/sharing.html %}
-      {% endunless %}
-    </footer>
-  {% endunless %}
-</article>
-{% if site.disqus_short_name and page.comments == true %}
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite">{% include post/disqus_thread.html %}</div>
-  </section>
-{% endif %}
+<div class="col-lg-6">
+  <h4>Easy</h4>
+  <p>Seriously. Clone the repo.
+    <br><code>bundle install</code>
+    <br><code>rake preview</code>
+  </p>
+
+  <h4>Octopress</h4>
+  <p>The incredible awesomeness of Octopress at your fingertips.</p>
+
+  <h4>Bootstrap</h4>
+  <p>The simple and friendly frontend framework everyone has heard of.</p>
 </div>
-{% unless page.sidebar == false %}
-<aside class="sidebar">
-  {% if site.page_asides.size %}
-    {% include_array page_asides %}
-  {% else %}
-    {% include_array default_asides %}
-  {% endif %}
-</aside>
-{% endunless %}
+
+<div class="col-lg-6">
+  <h4>Customize</h4>
+  <p>Customize your Octopress instance with Bootstrap.</p>
+
+  <h4>Do anything</h4>
+  <p>Octopress imposes no restrictions on you. Neither does Bootstrap.</p>
+
+  <h4>Static == Speed</h4>
+  <p>Because not every nail needs a heavy server-based framework+database hammer.</p>
+</div>
