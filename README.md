@@ -1,6 +1,6 @@
-## What is OctoStrap? (beside standing on other giants' shoulders)
+## What is Octostrap? (beside standing on other giants' shoulders)
 
-OctoStrap is [Octopress](http://octopress.org) blogging at its finest. And by finest, that means [Bootstrap](http://getbootstrap.com).
+Octostrap is [Octopress](http://octopress.org) blogging at its finest. And by finest, that means [Bootstrap](http://getbootstrap.com).
 
 Basically, this is just getting started, and we've stuck to getting a runnable Bootstrap environment going that allows you to clone, `bundle install`, and `rake preview`.
 
@@ -10,7 +10,7 @@ Okay, here's the fun part. You want to get a Bootstrap-based, Octopress-powered 
 
 **[Note: We assume you're starting with an empty repo for your project]**
 
-**Clone the OctoStrap repo:**
+**Clone the Octostrap repo:**
 
 ```
 $ git clone https://github.com/bobwaycott/octostrap.git your_project_dir
@@ -39,7 +39,7 @@ Let's see the **Takeover** example.
 
 ## Takeover: The Helpful Guide to Getting Started (4 commands)
 
-**Clone the OctoStrap repo:**
+**Clone the Octostrap repo:**
 
 ```
 $ git clone https://github.com/bobwaycott/octostrap.git your_project_dir
@@ -52,7 +52,7 @@ $ cd your_project_dir
 $ bundle install
 ```
 
-One of the additions OctoStrap adds to vanilla Octopress is its `takeover` task. 
+One of the additions Octostrap adds to vanilla Octopress is its `takeover` task.
 
 **Takeover.** Here's how that looks:
 
@@ -62,7 +62,7 @@ $ rake takeover
 Enter the read/write url for your repository
 (For example, 'git@github.com:your_username/your_repo.git')
            or 'https://github.com/your_username/your_repo.git')
-           
+
 Repository url: git@github.com:your_username/your_repo.git
 
 Renaming remote origin to octostrap
@@ -105,7 +105,7 @@ Alright, let's setup Github Pages deployment while you're at it. Let's see the *
 
 ## Takeover+Github Pages: The Super Helpful Guide to Getting Started (5 commands)
 
-**Clone the OctoStrap repo:**
+**Clone the Octostrap repo:**
 
 ```
 $ git clone https://github.com/bobwaycott/octostrap.git your_project_dir
@@ -140,7 +140,7 @@ Don't believe it?
 $ rake gen_deploy
 ```
 
-Watch as your OctoStrap site is uploaded to Github before your eyes. Wahoo.
+Watch as your Octostrap site is uploaded to Github before your eyes. Wahoo.
 
 (*Disclaimer: Github can take up to 10 minutes to register your new site before you'll see it. But trust us. This works.*)
 
@@ -182,7 +182,7 @@ Bootstrap CSS and JavaScript is included in the `source/stylesheets/bootstrap` a
 
 [![Build Status](https://travis-ci.org/bobwaycott/octostrap.png?branch=master)](https://travis-ci.org/bobwaycott/octostrap)
 
-We love to see people contributing to OctoStrap, whether it's a bug report, feature suggestion or a pull request. At the moment, there's plenty left to get working just right in OctoStrap, some of which is noted in the **Stuff to Do** section.
+We love to see people contributing to Octostrap, whether it's a bug report, feature suggestion or a pull request. At the moment, there's plenty left to get working just right in Octostrap, some of which is noted in the **Stuff to Do** section.
 
 
 ## License
@@ -198,7 +198,7 @@ THE SOFTWARE IS PROVIDED ‘AS IS’, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 
 #### If you want to be awesome.
-- Proudly display the 'Powered by *Octopress* and *Bootstrap*' credit in the footer of your OctoStrap site.
+- Proudly display the 'Powered by *Octopress* and *Bootstrap*' credit in the footer of your Octostrap site.
 - Be active and healthy.
 - Love people.
 - Make the world a better place.
