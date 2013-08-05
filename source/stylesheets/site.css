@@ -23,21 +23,16 @@ body {
   line-height: 40px;
   padding-bottom: 19px;
 }
+/* No text decoration on header link */
+.header h3 a {
+  text-decoration: none;
+}
 
 /* Custom page footer */
 .footer {
   padding-top: 19px;
   color: #777;
   border-top: 1px solid #e5e5e5;
-}
-
-/* Custom container */
-.container-narrow {
-  margin: 0 auto;
-  max-width: 960px;
-}
-.container-narrow > hr {
-  margin: 30px 0;
 }
 
 /* Main marketing message and sign up button */
