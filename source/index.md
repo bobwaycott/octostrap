@@ -5,7 +5,7 @@ title: Home Page
 column_one:
   - heading: Easy
     text: |
-      Seriously. Clone the repo. `bundle install`. `rake preview`.
+      `git clone`. `bundle install`. `rake preview`.
   - heading: Octopress
     text: The incredible awesomeness of Octopress at your fingertips.
   - heading: Bootstrap

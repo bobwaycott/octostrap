@@ -1,4 +1,4 @@
-## What is Octostrap? (beside standing on other giants' shoulders)
+## What is Octostrap?
 
 Octostrap is [Octopress](http://octopress.org) blogging at its finest. And by finest, that means [Bootstrap](http://getbootstrap.com).
 
@@ -8,11 +8,13 @@ Basically, this is just getting started, and we've stuck to getting a runnable B
 
 [Oh, so you want to see what it looks like?](http://bobwaycott.github.io/octotest/)
 
-## The Impatient Guide to Getting Started (3 commands)
+**Still interested? Read on!**
 
-Okay, here's the fun part. You want to get a Bootstrap-based, Octopress-powered static site going in less than 5 minutes.
+Okay, here's the fun part. You want to get a Bootstrap-based, Octopress-powered static site going in less than 5 minutes and in no more than 5 commands. Let's start with 3.
 
 **[Note: We assume you're starting with an empty repo for your project]**
+
+## The Impatient Guide to Getting Started (3 commands)
 
 **Clone the Octostrap repo:**
 
