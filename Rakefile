@@ -322,7 +322,7 @@ task :setup_github_pages, :repo do |t, args|
     user = repo_url.match(/github\.com\/([^\/]+)/)[1]
     project = (branch == 'gh-pages') ? repo_url.match(/\/\/github\.com\/\w+\/([^\.]+)/)[1] : ''
   end
-  unless (`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
+  if !(`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
     # If octopress is still the origin remote (from cloning) rename it to octopress
     system "git remote rename origin octostrap"
     if branch == 'master'
@@ -339,11 +339,15 @@ task :setup_github_pages, :repo do |t, args|
         system "rake set_root_dir[#{project}]"
       end
     end
+  else
+    unless !public_dir.match("#{project}").nil?
+      system "rake set_root_dir[#{project}]"
+    end
   end
   url = "http://#{user}.github.io"
   url += "/#{project}" unless project == ''
   jekyll_config = IO.read('_config.yml')
-  jekyll_config.sub!(/^github_url:.*$/, "github_url: #{url}")
+  jekyll_config.sub!(/^url:.*$/, "url: #{url}")
   File.open('_config.yml', 'w') do |f|
     f.write jekyll_config
   end
@@ -388,6 +392,7 @@ task :takeover, :repo do |t, args|
     system "git config branch.#{branch}.remote origin"
     puts "Set origin as default remote"
     puts "I can go ahead and push this to origin if you'd like"
+    puts "NOTE: You should probably only do this with a bare repository"
     permission = get_stdin("Shall I push to your repo? (y/n) ")
     if permission =~ /\Ay\Z/i
       system "git push -u origin #{branch}"
