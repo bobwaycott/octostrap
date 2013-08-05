@@ -2,8 +2,7 @@
 #      Main Configs       #
 # ----------------------- #
 
-url:
-github_url:
+url: http://yoursite.com
 title: OctoStrap
 subtitle: Octopress + Bootstrap Starter Kit
 author: bobwaycott
