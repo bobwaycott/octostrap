@@ -63,7 +63,7 @@ One of the additions Octostrap adds to vanilla Octopress is its `takeover` task.
 **Takeover.** Here's how that looks:
 
 ```
-$ rake setup
+$ rake takeover
 
 Enter the read/write url for your repository
 (For example, 'git@github.com:your_username/your_repo.git')
@@ -92,7 +92,7 @@ To git@github.com:your_username/your_repo.git
 Branch master set up to track remote branch master from origin.
 
 ---
-## Setup complete! ##
+## Takeover complete! ##
 ```
 
 **Done! Seriously. That is all.**
