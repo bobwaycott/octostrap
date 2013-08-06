@@ -34,16 +34,42 @@ server_port     = "4000"      # port for preview server eg. localhost:4000
 #########################
 
 desc "Initial setup for Octostrap: copies source/ starting point; prompts for setting Github repo and Github Pages"
-task :setup do
+task :setup, :skip_github do |t, args|
   if File.directory?(source_dir)
     abort("rake aborted!") if ask("Octostrap is already setup! Proceeding will overwrite existing files. Are you sure?", ['y', 'n']) == 'n'
   end
-  # copy theme into working Jekyll directories
+  # copy StarterPack into project folder
   puts "## Copying StarterPack into ./#{source_dir} ..."
+
   mkdir_p source_dir
   cp_r "#{starter_dir}/.", source_dir
   mkdir_p "#{source_dir}/#{posts_dir}"
   mkdir_p public_dir
+
+  puts "## StarterPack copied. You can now `rake preview` and see your Octostrap site."
+
+  # maybe do takeover
+  if args.skip_github
+    puts "\nSkipping Github setup"
+  else
+    repo_url = nil
+    if ask("\nWould you like to proceed with Github repo setup?", ['y', 'n']) == 'y'
+      puts "\nStarting Github setup ...\n"
+      repo_url = get_repo_url if repo_url.nil?
+      puts "\nAltering git config to use #{repo_url} as origin..."
+      Rake::Task["takeover"].invoke(repo_url)
+    else
+      puts "Skipping Github repo setup"
+    end
+    if ask("\nWould you like to proceed with Github Pages setup?", ['y', 'n']) == 'y'
+      puts "\nStarting Github Pages setup ...\n"
+      repo_url = get_repo_url if repo_url.nil?
+      Rake::Task["setup_github_pages"].invoke(repo_url)
+    else
+      puts "Skipping Github Pages setup"
+    end
+  end
+
 end
 
 desc "DESTRUCTIVE: returns Octostrap to default state"
@@ -51,6 +77,40 @@ task :reset do
   unless ask("DESTRUCTION AHEAD! Proceeding will delete your site. Are you sure?", ['y', 'n']) == 'n'
     rm_rf ["#{source_dir}", "#{public_dir}"]
   end
+end
+
+desc "Take ownership of your Octostrap site: updates git settings to set Octostrap as upstream and your repo as origin"
+task :takeover, :repo do |t, args|
+  if args.repo
+    repo_url = args.repo
+  else
+    puts "Enter the read/write url for your repository"
+    puts "(For example, 'git@github.com:your_username/your_repo.git')"
+    puts "           or 'https://github.com/your_username/your_repo.git')"
+    repo_url = get_stdin("\nRepository url: ")
+  end
+  branch = (`git rev-parse --abbrev-ref HEAD`).strip
+  unless (`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
+    # If octostrap is still the origin remote (from cloning) rename it to octostrap
+    puts "\nRenaming remote origin to octostrap"
+    system "git remote rename origin octostrap"
+    # Add the correct origin remote for user's repository URL
+    # and set new origin as master branch remote
+    system "git remote add origin #{repo_url}"
+    puts "Added remote #{repo_url} as origin"
+    system "git config branch.#{branch}.remote origin"
+    puts "Set origin as default remote"
+    puts "\nI can go ahead and push this to origin if you'd like"
+    puts "NOTE: You should probably only do this with a bare repository and an internet connection"
+    permission = get_stdin("\nShall I push to your repo? (y/n) ")
+    if permission =~ /\Ay\Z/i
+      puts "\n Pushing to your repo ...\n"
+      system "git push -u origin #{branch}"
+    else
+      puts "\nOkay, we'll skip that for now"
+    end
+  end
+  puts "\n---\n## Takeover complete! ##"
 end
 
 desc "Set up _deploy folder and deploy branch for Github Pages deployment"
@@ -118,40 +178,6 @@ task :setup_github_pages, :repo do |t, args|
     end
   end
   puts "\n---\n## Now you can deploy to #{url} with `rake deploy` ##"
-end
-
-desc "Change git config to take ownership of your own OctoStrap site"
-task :takeover, :repo do |t, args|
-  if args.repo
-    repo_url = args.repo
-  else
-    puts "Enter the read/write url for your repository"
-    puts "(For example, 'git@github.com:your_username/your_repo.git')"
-    puts "           or 'https://github.com/your_username/your_repo.git')"
-    repo_url = get_stdin("\nRepository url: ")
-  end
-  branch = (`git rev-parse --abbrev-ref HEAD`).strip
-  unless (`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
-    # If octostrap is still the origin remote (from cloning) rename it to octostrap
-    puts "\nRenaming remote origin to octostrap"
-    system "git remote rename origin octostrap"
-    # Add the correct origin remote for user's repository URL
-    # and set new origin as master branch remote
-    system "git remote add origin #{repo_url}"
-    puts "Added remote #{repo_url} as origin"
-    system "git config branch.#{branch}.remote origin"
-    puts "Set origin as default remote"
-    puts "\nI can go ahead and push this to origin if you'd like"
-    puts "NOTE: You should probably only do this with a bare repository and an internet connection"
-    permission = get_stdin("\nShall I push to your repo? (y/n) ")
-    if permission =~ /\Ay\Z/i
-      puts "\n Pushing to your repo ...\n"
-      system "git push -u origin #{branch}"
-    else
-      puts "\nOkay, we'll skip that for now"
-    end
-  end
-  puts "\n---\n## Takeover complete! ##"
 end
 
 #######################
@@ -423,6 +449,13 @@ def ok_failed(condition)
   else
     puts "FAILED"
   end
+end
+
+def get_repo_url
+  puts "Enter the read/write url for your repository"
+  puts "(For example, 'git@github.com:your_username/your_repo.git')"
+  puts "           or 'https://github.com/your_username/your_repo.git')"
+  get_stdin("\nRepository url: ")
 end
 
 def get_stdin(message)
