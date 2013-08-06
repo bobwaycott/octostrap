@@ -65,17 +65,16 @@ task :setup, :skip_github do |t, args|
       puts "\nStarting Github Pages setup ...\n\n"
       repo_url = get_repo_url if repo_url.nil?
       Rake::Task["setup_github_pages"].invoke(repo_url)
-      puts "\nI can also publish your new Octostrap site to Github Pages right now\n"
-      if ask("\nShall I publish to Github Pages now?", ['y', 'n']) == 'y'
-        Rake::Task["gen_deploy"].invoke
-      else
-        puts "\nOkay, we'll skip that for now"
-      end
     else
       puts "Skipping Github Pages setup"
     end
   end
+end
 
+desc "Octostrap ONLY: do not use; for internal use only; syncs starterpack files prior to git push"
+task :prep do
+  cp "./Rakefile", "#{starter_dir}/Rakefile.example"
+  cp "./config.rb", "#{starter_dir}/config.rb.example"
 end
 
 desc "DESTRUCTIVE: returns Octostrap to default state"
