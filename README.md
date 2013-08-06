@@ -98,8 +98,8 @@ Would you like to proceed with Github Pages setup? [y/n] y
 Starting Github Pages setup ...
 
 rm -rf public
-mkdir -p public/octotest
-## Site's root directory is now '/octotest' ##
+mkdir -p public/repo_name
+## Site's root directory is now '/repo_name' ##
 rm -rf _deploy
 mkdir _deploy
 cd _deploy
