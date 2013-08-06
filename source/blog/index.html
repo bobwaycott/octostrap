@@ -1,0 +1,12 @@
+---
+layout: page
+title: Blog
+---
+
+<div id="blog-archives">
+{% for post in site.posts reverse %}
+  <article>
+    {% include archive_post.html %}
+  </article>
+{% endfor %}
+</div>
