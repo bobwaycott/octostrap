@@ -77,7 +77,7 @@ task :reset do
   unless ask("DESTRUCTION AHEAD! Proceeding will delete your site. Are you sure?", ['y', 'n']) == 'n'
     rm_rf ["#{source_dir}", "#{public_dir}", "./_config.yml"]
     cp "#{starter_dir}/Rakefile.example", "./Rakefile"
-    cp "#{starter_dir}/config.rb", "./config.rb"
+    cp "#{starter_dir}/config.rb.example", "./config.rb"
   end
 end
 
