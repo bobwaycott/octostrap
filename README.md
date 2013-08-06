@@ -79,7 +79,8 @@ NOTE: You should probably only do this with a bare repository and an internet co
 
 Shall I push to your repo? (y/n) y
 
- Pushing to your repo ...
+Pushing to your repo ...
+
 Counting objects: 460, done.
 Delta compression using up to 8 threads.
 Compressing objects: 100% (249/249), done.
@@ -95,6 +96,7 @@ Branch master set up to track remote branch master from origin.
 Would you like to proceed with Github Pages setup? [y/n] y
 
 Starting Github Pages setup ...
+
 rm -rf public
 mkdir -p public/octotest
 ## Site's root directory is now '/octotest' ##
@@ -108,7 +110,7 @@ Initialized empty Git repository in /path/to/repo_name/_deploy/.git/
 cd -
 
 ---
-## Now you can deploy to http://username.github.io/repo_name with `rake gen_deploy` ##
+## Success! Now you can deploy to http://username.github.io/repo_name with `rake gen_deploy` ##
 ```
 
 
