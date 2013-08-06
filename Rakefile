@@ -16,32 +16,142 @@ deploy_branch  = "gh-pages"
 
 ## -- Misc Configs -- ##
 
-public_dir      = "public"    # compiled site directory
+public_dir      = "public"    # compiled site directory for local previewing
 source_dir      = "source"    # source file directory
 blog_index_dir  = 'source'    # directory for your blog's index page (if you put your index in source/blog/index.html, set this to 'source/blog')
 deploy_dir      = "_deploy"   # deploy directory (for Github pages deployment)
 stash_dir       = "_stash"    # directory to stash posts for speedy generation
 posts_dir       = "_posts"    # directory for blog files
-themes_dir      = ".themes"   # directory for blog files
+themes_dir      = ".themes"   # directory for theme files (currently unused in Octostrap)
+starter_dir    = ".starterpack"
 new_post_ext    = "markdown"  # default new post file extension when using the new_post task
 new_page_ext    = "markdown"  # default new page file extension when using the new_page task
 server_port     = "4000"      # port for preview server eg. localhost:4000
 
 
-desc "Initial setup for Octopress: copies the default theme into the path of Jekyll's generator. Rake install defaults to rake install[classic] to install a different theme run rake install[some_theme_name]"
-task :install, :theme do |t, args|
-  if File.directory?(source_dir) || File.directory?("sass")
-    abort("rake aborted!") if ask("A theme is already installed, proceeding will overwrite existing files. Are you sure?", ['y', 'n']) == 'n'
+#########################
+# Managing Octostrap
+#########################
+
+desc "Initial setup for Octostrap: copies source/ starting point; prompts for setting Github repo and Github Pages"
+task :setup do
+  if File.directory?(source_dir)
+    abort("rake aborted!") if ask("Octostrap is already setup! Proceeding will overwrite existing files. Are you sure?", ['y', 'n']) == 'n'
   end
   # copy theme into working Jekyll directories
-  theme = args.theme || 'classic'
-  puts "## Copying "+theme+" theme into ./#{source_dir} and ./sass"
+  puts "## Copying StarterPack into ./#{source_dir} ..."
   mkdir_p source_dir
-  cp_r "#{themes_dir}/#{theme}/source/.", source_dir
-  mkdir_p "sass"
-  cp_r "#{themes_dir}/#{theme}/sass/.", "sass"
+  cp_r "#{starter_dir}/.", source_dir
   mkdir_p "#{source_dir}/#{posts_dir}"
   mkdir_p public_dir
+end
+
+desc "DESTRUCTIVE: returns Octostrap to default state"
+task :reset do
+  unless ask("DESTRUCTION AHEAD! Proceeding will delete your site. Are you sure?", ['y', 'n']) == 'n'
+    rm_rf ["#{source_dir}", "#{public_dir}"]
+  end
+end
+
+desc "Set up _deploy folder and deploy branch for Github Pages deployment"
+task :setup_github_pages, :repo do |t, args|
+  if args.repo
+    repo_url = args.repo
+  else
+    puts "Enter the read/write url for your repository"
+    puts "(For example, 'git@github.com:your_username/your_username.github.io')"
+    puts "           or 'https://github.com/your_username/your_username.github.io')"
+    repo_url = get_stdin("\nRepository url: ")
+  end
+  branch = (repo_url.match(/\/[\w-]+\.github\.(?:io|com)/).nil?) ? 'gh-pages' : 'master'
+  protocol = (repo_url.match(/(^git)@/).nil?) ? 'https' : 'git'
+  if protocol == 'git'
+    user = repo_url.match(/:([^\/]+)/)[1]
+    project = (branch == 'gh-pages') ? repo_url.match(/\/([^\.]+)/)[1] : ''
+  else
+    user = repo_url.match(/github\.com\/([^\/]+)/)[1]
+    project = (branch == 'gh-pages') ? repo_url.match(/\/\/github\.com\/\w+\/([^\.]+)/)[1] : ''
+  end
+  if !(`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
+    # If octopress is still the origin remote (from cloning) rename it to octopress
+    system "git remote rename origin octostrap"
+    if branch == 'master'
+      # If this is a user/organization pages repository, add the correct origin remote
+      # and checkout the source branch for committing changes to the blog source.
+      system "\ngit remote add origin #{repo_url}"
+      puts "Added remote #{repo_url} as origin"
+      system "git config branch.master.remote origin"
+      puts "Set origin as default remote"
+      system "git branch -m master source"
+      puts "Master branch renamed to 'source' for committing your blog source files"
+    else
+      unless !public_dir.match("#{project}").nil?
+        system "rake set_root_dir[#{project}]"
+      end
+    end
+  else
+    unless !public_dir.match("#{project}").nil?
+      system "rake set_root_dir[#{project}]"
+    end
+  end
+  url = "http://#{user}.github.io"
+  url += "/#{project}" unless project == ''
+  jekyll_config = IO.read('_config.yml')
+  jekyll_config.sub!(/^url:.*$/, "url: #{url}")
+  File.open('_config.yml', 'w') do |f|
+    f.write jekyll_config
+  end
+  rm_rf deploy_dir
+  mkdir deploy_dir
+  cd "#{deploy_dir}" do
+    system "git init"
+    system "echo 'My Octostrap Page is coming soon &hellip;' > index.html"
+    system "git add ."
+    system "git commit -m \"Octostrap init\""
+    system "git branch -m gh-pages" unless branch == 'master'
+    system "git remote add origin #{repo_url}"
+    rakefile = IO.read(__FILE__)
+    rakefile.sub!(/deploy_branch(\s*)=(\s*)(["'])[\w-]*["']/, "deploy_branch\\1=\\2\\3#{branch}\\3")
+    rakefile.sub!(/deploy_default(\s*)=(\s*)(["'])[\w-]*["']/, "deploy_default\\1=\\2\\3push\\3")
+    File.open(__FILE__, 'w') do |f|
+      f.write rakefile
+    end
+  end
+  puts "\n---\n## Now you can deploy to #{url} with `rake deploy` ##"
+end
+
+desc "Change git config to take ownership of your own OctoStrap site"
+task :takeover, :repo do |t, args|
+  if args.repo
+    repo_url = args.repo
+  else
+    puts "Enter the read/write url for your repository"
+    puts "(For example, 'git@github.com:your_username/your_repo.git')"
+    puts "           or 'https://github.com/your_username/your_repo.git')"
+    repo_url = get_stdin("\nRepository url: ")
+  end
+  branch = (`git rev-parse --abbrev-ref HEAD`).strip
+  unless (`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
+    # If octostrap is still the origin remote (from cloning) rename it to octostrap
+    puts "\nRenaming remote origin to octostrap"
+    system "git remote rename origin octostrap"
+    # Add the correct origin remote for user's repository URL
+    # and set new origin as master branch remote
+    system "git remote add origin #{repo_url}"
+    puts "Added remote #{repo_url} as origin"
+    system "git config branch.#{branch}.remote origin"
+    puts "Set origin as default remote"
+    puts "\nI can go ahead and push this to origin if you'd like"
+    puts "NOTE: You should probably only do this with a bare repository and an internet connection"
+    permission = get_stdin("\nShall I push to your repo? (y/n) ")
+    if permission =~ /\Ay\Z/i
+      puts "\n Pushing to your repo ...\n"
+      system "git push -u origin #{branch}"
+    else
+      puts "\nOkay, we'll skip that for now"
+    end
+  end
+  puts "\n---\n## Takeover complete! ##"
 end
 
 #######################
@@ -50,7 +160,7 @@ end
 
 desc "Generate jekyll site"
 task :generate do
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   puts "## Generating Site with Jekyll"
   system "compass compile --css-dir #{source_dir}/stylesheets"
   system "jekyll"
@@ -58,7 +168,7 @@ end
 
 desc "Watch the site and regenerate when it changes"
 task :watch do
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   puts "Starting to watch source with Jekyll and Compass."
   system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
   jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --auto")
@@ -72,14 +182,13 @@ task :watch do
   [jekyllPid, compassPid].each { |pid| Process.wait(pid) }
 end
 
-desc "preview the site in a web browser"
+desc "Preview the site in a web browser"
 task :preview, :port do |t, args|
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   if args.port
     server_port = args.port
   end
   puts "Starting to watch source with Jekyll and Compass. Starting Rack on port #{server_port}"
-  system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
   jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --auto")
   compassPid = Process.spawn("compass watch")
   rackupPid = Process.spawn("rackup --port #{server_port}")
@@ -95,12 +204,14 @@ end
 # usage rake new_post[my-new-post] or rake new_post['my new post'] or rake new_post (defaults to "new-post")
 desc "Begin a new post in #{source_dir}/#{posts_dir}"
 task :new_post, :title do |t, args|
+  raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
+
   if args.title
     title = args.title
   else
     title = get_stdin("Enter a title for your post: ")
   end
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+
   mkdir_p "#{source_dir}/#{posts_dir}"
   filename = "#{source_dir}/#{posts_dir}/#{Time.now.strftime('%Y-%m-%d')}-#{title.to_url}.#{new_post_ext}"
   if File.exist?(filename)
@@ -121,7 +232,7 @@ end
 # usage rake new_page[my-new-page] or rake new_page[my-new-page.html] or rake new_page (defaults to "new-page.markdown")
 desc "Create a new page in #{source_dir}/(filename)/index.#{new_page_ext}"
 task :new_page, :filename do |t, args|
-  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   args.with_defaults(:filename => 'new-page')
   page_dir = [source_dir]
   if args.filename.downcase =~ /(^.+\/)?(.+)/
@@ -304,107 +415,6 @@ task :set_root_dir, :dir do |t, args|
     mkdir_p "#{public_dir}#{dir}"
     puts "## Site's root directory is now '/#{dir.sub(/^\//, '')}' ##"
   end
-end
-
-desc "Set up _deploy folder and deploy branch for Github Pages deployment"
-task :setup_github_pages, :repo do |t, args|
-  if args.repo
-    repo_url = args.repo
-  else
-    puts "Enter the read/write url for your repository"
-    puts "(For example, 'git@github.com:your_username/your_username.github.io')"
-    puts "           or 'https://github.com/your_username/your_username.github.io')"
-    repo_url = get_stdin("\nRepository url: ")
-  end
-  branch = (repo_url.match(/\/[\w-]+\.github\.(?:io|com)/).nil?) ? 'gh-pages' : 'master'
-  protocol = (repo_url.match(/(^git)@/).nil?) ? 'https' : 'git'
-  if protocol == 'git'
-    user = repo_url.match(/:([^\/]+)/)[1]
-    project = (branch == 'gh-pages') ? repo_url.match(/\/([^\.]+)/)[1] : ''
-  else
-    user = repo_url.match(/github\.com\/([^\/]+)/)[1]
-    project = (branch == 'gh-pages') ? repo_url.match(/\/\/github\.com\/\w+\/([^\.]+)/)[1] : ''
-  end
-  if !(`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
-    # If octopress is still the origin remote (from cloning) rename it to octopress
-    system "git remote rename origin octostrap"
-    if branch == 'master'
-      # If this is a user/organization pages repository, add the correct origin remote
-      # and checkout the source branch for committing changes to the blog source.
-      system "\ngit remote add origin #{repo_url}"
-      puts "Added remote #{repo_url} as origin"
-      system "git config branch.master.remote origin"
-      puts "Set origin as default remote"
-      system "git branch -m master source"
-      puts "Master branch renamed to 'source' for committing your blog source files"
-    else
-      unless !public_dir.match("#{project}").nil?
-        system "rake set_root_dir[#{project}]"
-      end
-    end
-  else
-    unless !public_dir.match("#{project}").nil?
-      system "rake set_root_dir[#{project}]"
-    end
-  end
-  url = "http://#{user}.github.io"
-  url += "/#{project}" unless project == ''
-  jekyll_config = IO.read('_config.yml')
-  jekyll_config.sub!(/^url:.*$/, "url: #{url}")
-  File.open('_config.yml', 'w') do |f|
-    f.write jekyll_config
-  end
-  rm_rf deploy_dir
-  mkdir deploy_dir
-  cd "#{deploy_dir}" do
-    system "git init"
-    system "echo 'My Octopress Page is coming soon &hellip;' > index.html"
-    system "git add ."
-    system "git commit -m \"Octopress init\""
-    system "git branch -m gh-pages" unless branch == 'master'
-    system "git remote add origin #{repo_url}"
-    rakefile = IO.read(__FILE__)
-    rakefile.sub!(/deploy_branch(\s*)=(\s*)(["'])[\w-]*["']/, "deploy_branch\\1=\\2\\3#{branch}\\3")
-    rakefile.sub!(/deploy_default(\s*)=(\s*)(["'])[\w-]*["']/, "deploy_default\\1=\\2\\3push\\3")
-    File.open(__FILE__, 'w') do |f|
-      f.write rakefile
-    end
-  end
-  puts "\n---\n## Now you can deploy to #{url} with `rake deploy` ##"
-end
-
-desc "Change git config to take ownership of your own OctoStrap site"
-task :takeover, :repo do |t, args|
-  if args.repo
-    repo_url = args.repo
-  else
-    puts "Enter the read/write url for your repository"
-    puts "(For example, 'git@github.com:your_username/your_repo.git')"
-    puts "           or 'https://github.com/your_username/your_repo.git')"
-    repo_url = get_stdin("\nRepository url: ")
-  end
-  branch = (`git rev-parse --abbrev-ref HEAD`).strip
-  unless (`git remote -v` =~ /origin.+?octostrap(?:\.git)?/).nil?
-    # If octostrap is still the origin remote (from cloning) rename it to octostrap
-    puts "\nRenaming remote origin to octostrap"
-    system "git remote rename origin octostrap"
-    # Add the correct origin remote for user's repository URL
-    # and set new origin as master branch remote
-    system "git remote add origin #{repo_url}"
-    puts "Added remote #{repo_url} as origin"
-    system "git config branch.#{branch}.remote origin"
-    puts "Set origin as default remote"
-    puts "\nI can go ahead and push this to origin if you'd like"
-    puts "NOTE: You should probably only do this with a bare repository and an internet connection"
-    permission = get_stdin("\nShall I push to your repo? (y/n) ")
-    if permission =~ /\Ay\Z/i
-      puts "\n Pushing to your repo ...\n"
-      system "git push -u origin #{branch}"
-    else
-      puts "\nOkay, we'll skip that for now"
-    end
-  end
-  puts "\n---\n## Takeover complete! ##"
 end
 
 def ok_failed(condition)
