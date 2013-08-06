@@ -14,7 +14,7 @@ Okay, here's the fun part. You want to get a Bootstrap-based, Octopress-powered 
 
 **[Note: We assume you're starting with an empty repo for your project]**
 
-## The Impatient Guide to Getting Started (3 commands)
+## The Impatient Guide to Getting Started
 
 **Clone the Octostrap repo:**
 
@@ -127,9 +127,7 @@ Watch as your Octostrap site is uploaded to Github before your eyes. Wahoo.
 (*Disclaimer: Github can take up to 10 minutes to register your new site before you'll see it. But trust us. This works.*)
 
 **[IMPORTANT]**
-When you `setup_github_pages`, your site root is going to switch to be the `your_repo` name from your Github repo instead of the default `http://localhost:4000/` path. This ensures that all assets have properly generated URLs (or else Github Pages won't show you any Bootstrap prettiness).
-
-**Seriously. That is all.**
+When you `setup_github_pages`, your site root is going to switch to be the `repo_name` name from your Github repo instead of the default `/` path. This ensures that all assets have properly generated URLs (or else Github Pages won't show you any Bootstrap prettiness). This means that when you `rake preview` an Octostrap site that has Github Pages enabled, you'll visit `http://localhost:4000/repo_name/` instead of the default `http://localhost:4000/` location.
 
 ## Documentation
 
