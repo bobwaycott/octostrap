@@ -1,21 +1,32 @@
 ---
-layout: two_columns
+layout: home
 title: Home Page
 
-column_one:
-  - heading: Easy
+featurettes:
+  - title: 1% setup. 99% productivity.
+    subtitle: It'll blow your mind.
+    img: setup.png
     text: |
-      `git clone`. `bundle install`. `rake preview`.
-  - heading: Octopress
-    text: The incredible awesomeness of Octopress at your fingertips.
-  - heading: Bootstrap
-    text: The simple and friendly frontend framework everyone has heard of.
+      [Octopress](http://octopress.org) makes managing static sites and blogs as easy as can be. [Bootstrap](http://getbootstrap.com) does the same thing for front-end development and styling.
 
-column_two:
-  - heading: Customize
-    text: Customize your Octopress instance with Bootstrap.
-  - heading: Do anything
-    text: Octopress imposes no restrictions on you. Neither does Bootstrap.
-  - heading: Static == Speed
-    text: Because not every nail needs a heavy server-based framework+database hammer.
+      **[Octostrap](https://github.com/bobwaycott/octostrap) is the baby everyone wanted them to have.**
+
+  - title: Do anything.
+    subtitle: Octostrap won't stand in your way.
+    img: code.png
+    text: |
+      Octopress is known for its impressive flexibility to make any page wanted, at any URL, and there's no complicated CMS or admins or other crap getting in the way.
+
+      Bootstrap excels at providing a clean and consistent framework for building up any UI imaginable.
+
+      **Octostrap steps back and lets both of them shine together.**
+
+  - title: Static.
+    subtitle: Speed.
+    text: |
+      Not every nail needs a server-side framework+database hammer.
+
+      Not everyone who wants a website or blog wants to figure out how to setup a database, proxy requests, or build models+views+controllers.
+
+      **Octostrap has you covered.**
 ---
