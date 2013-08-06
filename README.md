@@ -6,7 +6,7 @@ Basically, this is just getting started, and we've stuck to getting a runnable B
 
 ## Immediate Gratification for the Internet Generation
 
-[Oh, so you want to see what it looks like?](http://bobwaycott.github.io/octotest/)
+[So you want to see what it looks like?](http://bobwaycott.github.io/octotest/)
 
 **Still interested? Read on!**
 
@@ -63,7 +63,7 @@ One of the additions Octostrap adds to vanilla Octopress is its `takeover` task.
 **Takeover.** Here's how that looks:
 
 ```
-$ rake takeover
+$ rake setup
 
 Enter the read/write url for your repository
 (For example, 'git@github.com:your_username/your_repo.git')
@@ -92,7 +92,7 @@ To git@github.com:your_username/your_repo.git
 Branch master set up to track remote branch master from origin.
 
 ---
-## Takeover complete! ##
+## Setup complete! ##
 ```
 
 **Done! Seriously. That is all.**
@@ -162,8 +162,6 @@ When you `setup_github_pages`, your site root is going to switch to be the `your
 
 **Seriously. That is all.**
 
-
-
 ## Documentation
 
 Check out [Octopress docs](http://octopress.org/docs) for guides and documentation specific to Octopress. Check out [Bootstrap docs](http://getbootstrap.com/getting-started/) for guides and documentation specific to Bootstrap.
@@ -190,7 +188,6 @@ Bootstrap CSS and JavaScript is included in the `source/stylesheets/bootstrap` a
 
 We love to see people contributing to Octostrap, whether it's a bug report, feature suggestion or a pull request. At the moment, there's plenty left to get working just right in Octostrap, some of which is noted in the **Stuff to Do** section.
 
-
 ## License
 (The MIT License)
 
@@ -201,7 +198,6 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED ‘AS IS’, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 
 #### If you want to be awesome.
 - Proudly display the 'Powered by *Octopress* and *Bootstrap*' credit in the footer of your Octostrap site.
