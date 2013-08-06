@@ -6,7 +6,7 @@ Basically, we're just getting started, and we've stuck to getting a runnable Oct
 
 ## Immediate Gratification for the Internet Generation
 
-[So you want to see what it looks like?](http://bobwaycott.github.io/octotest/)
+###[Do you want to see what Octostrap looks like?](http://bobwaycott.github.io/octotest/)
 
 **Still interested? Read on!**
 
