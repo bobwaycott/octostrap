@@ -2,7 +2,7 @@
 
 Octostrap is [Octopress](http://octopress.org) blogging at its finest. And by finest, that means [Bootstrap](http://getbootstrap.com).
 
-Basically, this is just getting started, and we've stuck to getting a runnable Bootstrap environment going that allows you to clone, `bundle install`, and `rake preview`.
+Basically, we're just getting started, and we've stuck to getting a runnable Octopress+Bootstrap environment going in under 5 minutes (and that's if you're internet connection is slow).
 
 ## Immediate Gratification for the Internet Generation
 
@@ -10,7 +10,7 @@ Basically, this is just getting started, and we've stuck to getting a runnable B
 
 **Still interested? Read on!**
 
-Okay, here's the fun part. You want to get a Bootstrap-based, Octopress-powered static site going in less than 5 minutes and in no more than 5 commands. Let's start with 3.
+Okay, here's the fun part.
 
 **[Note: We assume you're starting with an empty repo for your project]**
 
