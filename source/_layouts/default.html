@@ -1,3 +1,63 @@
 {% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
-{% include head.html %}
-{% include examples/default.html %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
+    <meta name="author" content="{{ site.author }}">
+
+    {% capture description %}{% if page.description %}{{ page.description }}{% else %}{{ content | raw_content }}{% endif %}{% endcapture %}
+    <meta name="description" content="{{ description | strip_html | condense_spaces | truncate:150 }}">
+    {% if page.keywords %}<meta name="keywords" content="{{ page.keywords }}">{% endif %}
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% capture canonical %}{{ site.url }}{% if site.permalink contains '.html' %}{{ page.url }}{% else %}{{ page.url | remove:'index.html' | strip_slash }}{% endif %}{% endcapture %}
+    <link rel="canonical" href="{{ canonical }}">
+    <link href="{{ root_url }}/favicon.png" rel="icon">
+
+    <!-- Bootstrap -->
+    <link href="{{ root_url }}/stylesheets/bootstrap/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="{{ root_url }}/stylesheets/site.css" rel="stylesheet" media="screen">
+
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          {% capture page_url  %}{{ page.url | remove: "index.html" }}{% endcapture %}
+          <li {% if page_url == site.root %}class="active"{% endif %}><a href="{{ site.root }}">Home</a></li>
+          <li {% if page_url == "/blog/" %}class="active"{% endif %}><a href="{{ root_url }}/blog/">Blog</a></li>
+          <li {% if page_url == "/docs/" %}class="active"{% endif %}><a href="{{ root_url }}/docs/">Docs</a></li>
+        </ul> <!-- /nav -->
+        <h3 class="text-muted"><a href="{{ root_url }}/">{{ site.title }}</a></h3>
+      </div> <!-- /header -->
+
+      <!-- Wrap the rest of the page in another container to center all the content. -->
+      <div class="marketing">
+        {{ content | expand_urls: root_url }}
+      </div> <!-- /marketing -->
+
+      <div class="footer">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>Copyright &copy; {{ site.time | date: "%Y" }} - {{ site.author }} -
+          <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> &amp; <a href="http://getbootstrap.com">Bootstrap</a></span>
+        </p>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <!-- UNUSED but included to show how you can load in jQuery + Bootstrap JS
+      <script src="{{ root_url }}/javascripts/libs/jquery.min.js"></script>
+      <script src="{{ root_url }}/javascripts/bootstrap/bootstrap.js"></script>
+    -->
+    <script src="{{ root_url }}/javascripts/site.js"></script>
+  </body>
+</html>

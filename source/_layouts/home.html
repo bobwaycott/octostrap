@@ -1,0 +1,29 @@
+---
+layout: default
+---
+
+<div class="jumbotron">
+  <h1>{{ site.subtitle }}</h1>
+  <p class="lead">Octopress + Bootstrap&mdash;Ready to go right out-of-the-box.</p>
+  <p><a class="btn btn-large btn-success" href="https://github.com/bobwaycott/octostrap/">Get Octostrap</a></p>
+</div>
+
+<!-- START THE FEATURETTES -->
+<hr class="featurette-divider">
+{% for feature in page.featurettes %}
+  <div class="featurette">
+    <img class="featurette-image img-circle {% cycle 'pull-right', 'pull-left' %}" src="holder.js/512x512">
+    <h2 class="featurette-heading">{{ feature.title }} <span class="text-muted">{{ feature.subtitle }}</span></h2>
+    <p class="lead">{{ feature.text | markdownify }}</p>
+  </div>
+  <hr class="featurette-divider">
+{% endfor %}
+<!-- /END THE FEATURETTES -->
+
+<!--
+<img class="featurette-image img-thumbnail {% cycle 'pull-right', 'pull-left' %}" data-src="holder.js/512x512">
+
+<div class="featurette-image {% cycle 'pull-right', 'pull-left' %}">
+  <img class="img-responsive img-thumbnail" src="{{ root_url }}/images/{{ feature.img }}">
+</div>
+-->
