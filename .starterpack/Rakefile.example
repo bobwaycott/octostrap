@@ -65,6 +65,12 @@ task :setup, :skip_github do |t, args|
       puts "\nStarting Github Pages setup ...\n\n"
       repo_url = get_repo_url if repo_url.nil?
       Rake::Task["setup_github_pages"].invoke(repo_url)
+      puts "\nI can also publish your new Octostrap site to Github Pages right now\n"
+      if ask("\nShall I publish to Github Pages now?", ['y', 'n']) == 'y'
+        Rake::Task["gen_deploy"].invoke
+      else
+        puts "\nOkay, we'll skip that for now"
+      end
     else
       puts "Skipping Github Pages setup"
     end
@@ -104,8 +110,7 @@ task :takeover, :repo do |t, args|
     puts "Set origin as default remote"
     puts "\nI can go ahead and push this to origin if you'd like"
     puts "NOTE: You should only do this with a bare repository and an internet connection"
-    permission = get_stdin("\nShall I push to your repo? (y/n) ")
-    if permission =~ /\Ay\Z/i
+    if ask("\nShall I push to your repo?", ['y', 'n']) == 'y'
       puts "\nPushing to your repo ...\n\n"
       system "git push -u origin #{branch}"
     else
