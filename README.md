@@ -29,6 +29,12 @@ $ cd your_project_dir
 $ bundle install
 ```
 
+**Setup**
+
+```
+$ rake setup
+```
+
 **Done! Seriously. That is all.**
 
 **Time for a preview?**
@@ -39,40 +45,33 @@ $ rake preview
 
 Visit `http://localhost:4000/` in your browser. See Bootstrap. Shed tears (of joy).
 
-**Want some help setting up your own Github repo?**
+Let's see more of what `rake setup` looks like.
 
-Let's see the **Takeover** example.
-
-## Takeover: The Helpful Guide to Getting Started (4 commands)
-
-**Clone the Octostrap repo:**
+## Full Example: What does setup look like?
 
 ```
-$ git clone https://github.com/bobwaycott/octostrap.git your_project_dir
-```
+$ rake setup
 
-**Install dependencies**
+## Copying StarterPack into ./source ...
+mkdir -p source
+cp -r .starterpack/. source
+mkdir -p source/_posts
+mkdir -p public
+## StarterPack copied. You can now `rake preview` and see your Octostrap site.
 
-```
-$ cd your_project_dir
-$ bundle install
-```
+Would you like to proceed with Github repo setup? [y/n] y
 
-One of the additions Octostrap adds to vanilla Octopress is its `takeover` task.
-
-**Takeover.** Here's how that looks:
-
-```
-$ rake takeover
-
+Starting Github setup ...
 Enter the read/write url for your repository
 (For example, 'git@github.com:your_username/your_repo.git')
            or 'https://github.com/your_username/your_repo.git')
 
-Repository url: git@github.com:your_username/your_repo.git
+Repository url: git@github.com:username/repo_name.git
+
+Altering git config to use git@github.com:username/repo_name.git as origin...
 
 Renaming remote origin to octostrap
-Added remote git@github.com:your_username/your_repo.git as origin
+Added remote git@github.com:username/repo_name.git as origin
 Set origin as default remote
 
 I can go ahead and push this to origin if you'd like
@@ -80,67 +79,42 @@ NOTE: You should probably only do this with a bare repository and an internet co
 
 Shall I push to your repo? (y/n) y
 
-Pushing to your repo …
-
-Counting objects: 298, done.
+ Pushing to your repo ...
+Counting objects: 460, done.
 Delta compression using up to 8 threads.
-Compressing objects: 100% (190/190), done.
-Writing objects: 100% (298/298), 283.28 KiB | 0 bytes/s, done.
-Total 298 (delta 95), reused 298 (delta 95)
-To git@github.com:your_username/your_repo.git
+Compressing objects: 100% (249/249), done.
+Writing objects: 100% (460/460), 309.38 KiB | 0 bytes/s, done.
+Total 460 (delta 194), reused 453 (delta 191)
+To git@github.com:username/repo_name.git
  * [new branch]      master -> master
 Branch master set up to track remote branch master from origin.
 
 ---
 ## Takeover complete! ##
+
+Would you like to proceed with Github Pages setup? [y/n] y
+
+Starting Github Pages setup ...
+rm -rf public
+mkdir -p public/octotest
+## Site's root directory is now '/octotest' ##
+rm -rf _deploy
+mkdir _deploy
+cd _deploy
+Initialized empty Git repository in /path/to/repo_name/_deploy/.git/
+[master (root-commit) 1fdca24] Octostrap init
+ 1 file changed, 1 insertion(+)
+ create mode 100644 index.html
+cd -
+
+---
+## Now you can deploy to http://username.github.io/repo_name with `rake gen_deploy` ##
 ```
 
-**Done! Seriously. That is all.**
 
-**Time for a preview?**
+## Github Pages: Setup being super helpful
 
-```
-$ rake preview
-```
-
-Visit `http://localhost:4000/` in your browser. See Bootstrap. Shed tears (of joy).
-
-**Takeover? Got it. But what about Github Pages?**
-
-Alright, let's setup Github Pages deployment while you're at it. Let's see the **Takeover + Github Pages** example.
-
-## Takeover+Github Pages: The Super Helpful Guide to Getting Started (5 commands)
-
-**Clone the Octostrap repo:**
-
-```
-$ git clone https://github.com/bobwaycott/octostrap.git your_project_dir
-```
-
-**Install dependencies**
-
-```
-$ cd your_project_dir
-$ bundle install
-```
-
-**Takeover**
-
-```
-$ rake takeover
-```
-
-**Setup Github Pages**
-
-```
-$ rake setup_github_pages
-```
-
-Just give it your Github repo, same as you did with `takeover`, and let it do its thing.
-
-**Done! Seriously. That is all.**
-
-Don't believe it?
+Okay, so you ran `rake setup` and told Octostrap to setup Github Pages. Ready to prove that everything worked?
 
 ```
 $ rake gen_deploy
@@ -150,14 +124,7 @@ Watch as your Octostrap site is uploaded to Github before your eyes. Wahoo.
 
 (*Disclaimer: Github can take up to 10 minutes to register your new site before you'll see it. But trust us. This works.*)
 
-**Time for a preview?**
-
-```
-$ rake preview
-```
-
-Visit `localhost:4000/your_repo` in your browser. See Bootstrap. Shed tears (of joy).
-
+**[IMPORTANT]**
 When you `setup_github_pages`, your site root is going to switch to be the `your_repo` name from your Github repo instead of the default `http://localhost:4000/` path. This ensures that all assets have properly generated URLs (or else Github Pages won't show you any Bootstrap prettiness).
 
 **Seriously. That is all.**

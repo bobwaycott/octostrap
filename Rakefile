@@ -62,7 +62,7 @@ task :setup, :skip_github do |t, args|
       puts "Skipping Github repo setup"
     end
     if ask("\nWould you like to proceed with Github Pages setup?", ['y', 'n']) == 'y'
-      puts "\nStarting Github Pages setup ...\n"
+      puts "\nStarting Github Pages setup ...\n\n"
       repo_url = get_repo_url if repo_url.nil?
       Rake::Task["setup_github_pages"].invoke(repo_url)
     else
@@ -104,7 +104,7 @@ task :takeover, :repo do |t, args|
     puts "NOTE: You should probably only do this with a bare repository and an internet connection"
     permission = get_stdin("\nShall I push to your repo? (y/n) ")
     if permission =~ /\Ay\Z/i
-      puts "\n Pushing to your repo ...\n"
+      puts "\nPushing to your repo ...\n\n"
       system "git push -u origin #{branch}"
     else
       puts "\nOkay, we'll skip that for now"
@@ -177,7 +177,7 @@ task :setup_github_pages, :repo do |t, args|
       f.write rakefile
     end
   end
-  puts "\n---\n## Now you can deploy to #{url} with `rake deploy` ##"
+  puts "\n---\n## Success! Now you can deploy to #{url} with `rake gen_deploy` ##"
 end
 
 #######################
