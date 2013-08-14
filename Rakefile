@@ -16,17 +16,17 @@ deploy_branch  = "gh-pages"
 
 ## -- Misc Configs -- ##
 
-public_dir      = "public"    # compiled site directory for local previewing
-source_dir      = "source"    # source file directory
-blog_index_dir  = 'source'    # directory for your blog's index page (if you put your index in source/blog/index.html, set this to 'source/blog')
-deploy_dir      = "_deploy"   # deploy directory (for Github pages deployment)
-stash_dir       = "_stash"    # directory to stash posts for speedy generation
-posts_dir       = "_posts"    # directory for blog files
-themes_dir      = ".themes"   # directory for theme files (currently unused in Octostrap)
-starter_dir    = ".starterpack"
-new_post_ext    = "markdown"  # default new post file extension when using the new_post task
-new_page_ext    = "markdown"  # default new page file extension when using the new_page task
-server_port     = "4000"      # port for preview server eg. localhost:4000
+public_dir      = "public"      # compiled site directory for local previewing
+source_dir      = "source"      # source file directory
+blog_index_dir  = 'source'      # directory for your blog's index page (if you put your index in source/blog/index.html, set this to 'source/blog')
+deploy_dir      = "_deploy"     # deploy directory (for Github pages deployment)
+stash_dir       = "_stash"      # directory to stash posts for speedy generation
+posts_dir       = "_posts"      # directory for blog files
+themes_dir      = ".themes"     # directory for theme files (currently unused in Octostrap)
+starter_dir    = ".starterpack" # directory where starter layouts/includes/stylesheets/js are stored
+new_post_ext    = "md"          # default new post file extension when using the new_post task
+new_page_ext    = "md"          # default new page file extension when using the new_page task
+server_port     = "4000"        # port for preview server eg. localhost:4000
 
 
 #########################
@@ -256,6 +256,7 @@ task :new_post, :title do |t, args|
     post.puts "title: \"#{title.gsub(/&/,'&amp;')}\""
     post.puts "date: #{Time.now.strftime('%Y-%m-%d %H:%M')}"
     post.puts "comments: true"
+    post.puts "sharing: true"
     post.puts "categories: "
     post.puts "---"
   end
@@ -265,7 +266,14 @@ end
 desc "Create a new page in #{source_dir}/(filename)/index.#{new_page_ext}"
 task :new_page, :filename do |t, args|
   raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
-  args.with_defaults(:filename => 'new-page')
+
+  if args.filename
+    filename = args.filename
+  else
+    filename = get_stdin("Enter a title for your page: ")
+    filename = filename.to_url
+  end
+
   page_dir = [source_dir]
   if args.filename.downcase =~ /(^.+\/)?(.+)/
     filename, dot, extension = $2.rpartition('.').reject(&:empty?)         # Get filename and extension
@@ -290,7 +298,6 @@ task :new_page, :filename do |t, args|
       page.puts "layout: page"
       page.puts "title: \"#{title}\""
       page.puts "date: #{Time.now.strftime('%Y-%m-%d %H:%M')}"
-      page.puts "comments: true"
       page.puts "sharing: true"
       page.puts "footer: true"
       page.puts "---"
