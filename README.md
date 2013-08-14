@@ -4,6 +4,10 @@ Octostrap is [Octopress](http://octopress.org) blogging at its finest. And by fi
 
 Basically, we're just getting started, and we've stuck to getting a runnable Octopress+Bootstrap environment going in under 5 minutes (and that's if you're internet connection is slow).
 
+## Bootstrap v2 and v3 Supported
+
+Octostrap includes support for Bootstrap versions 2 and the currently in-development version 3 variant. Simply path your CSS and JS imports with `/v2/` and `/v3/` to select your version.
+
 ## Immediate Gratification for the Internet Generation
 
 ###[Do you want to see what Octostrap looks like?](http://bobwaycott.github.io/octotest/)
