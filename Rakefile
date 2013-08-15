@@ -4,7 +4,7 @@ require 'stringex'
 require 'ostruct'
 require 'yaml'
 
-CONFIG = OpenStruct.new(YAML.load_file('./_config.yml'))
+CONFIG = OpenStruct.new(YAML.load_file('_rakes/rakes.config.yml'))
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
