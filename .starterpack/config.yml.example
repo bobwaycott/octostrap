@@ -22,6 +22,39 @@ subscribe_email:
 email:
 
 # ----------------------- #
+#    Rakefile Configs     #
+# ----------------------- #
+
+## IMPORTANT: Do not edit this section unless you know what you're doing ##
+
+## -- Rsync Deploy config -- ##
+# Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
+ssh_user: "user@domain.com"
+ssh_port: "22"
+document_root: "~/website.com/"
+rsync_delete: false
+rsync_args: ""  # Any extra arguments to pass to rsync
+deploy_default: "rsync"
+
+# This will be configured for you when you run config_deploy
+deploy_branch: "gh-pages"
+
+## -- Directories -- ##
+public_dir: "public"        # compiled site directory for local previewing
+source_dir: "source"        # source file directory
+blog_index_dir: "source"    # directory for your blog's index page (if you put your index in source/blog/index.html, set this to 'source/blog')
+deploy_dir: "_deploy"       # deploy directory (for Github pages deployment)
+stash_dir : "_stash"        # directory to stash posts for speedy generation
+posts_dir : "_posts"        # directory for blog files
+themes_dir: ".themes"       # directory for theme files (currently unused in Octostrap)
+starter_dir: ".starterpack" # directory where starter layouts/includes/stylesheets/js are stored
+data_dir: ".data"           # directory for data fixtures (currently used for events)
+event_dir: "events"         # directory for generating events
+new_post_ext: "md"          # default new post file extension when using the new_post task
+new_page_ext: "md"          # default new page file extension when using the new_page task
+server_port: "4000"         # port for preview server eg. localhost:4000
+
+# ----------------------- #
 #    Jekyll & Plugins     #
 # ----------------------- #
 
@@ -45,7 +78,6 @@ paginate: 10          # Posts per page on the blog index
 pagination_dir: blog  # Directory base for pagination URLs eg. /blog/page/2/
 recent_posts: 5       # Posts in the sidebar Recent Posts section
 excerpt_link: "Read on &rarr;"  # "Continue reading" link text at the bottom of excerpted articles
-
 titlecase: true       # Converts page and post titles to titlecase
 
 # list each of the sidebar modules you want to include, in the order you want them to appear.
@@ -61,6 +93,8 @@ titlecase: true       # Converts page and post titles to titlecase
 # ----------------------- #
 #   3rd Party Settings    #
 # ----------------------- #
+
+##### CURRENTLY UNUSED/UNTESTED IN OCTOSTRAP #####
 
 # Github repositories
 github_user:

@@ -1,33 +1,39 @@
-require "rubygems"
-require "bundler/setup"
-require "stringex"
+require 'rubygems'
+require 'bundler/setup'
+require 'stringex'
+require 'ostruct'
+require 'yaml'
+
+CONFIG = OpenStruct.new(YAML.load_file('./_config.yml'))
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
-ssh_user       = "user@domain.com"
-ssh_port       = "22"
-document_root  = "~/website.com/"
-rsync_delete   = false
-rsync_args     = ""  # Any extra arguments to pass to rsync
-deploy_default = "rsync"
+ssh_user       = CONFIG.ssh_user
+ssh_port       = CONFIG.ssh_port
+document_root  = CONFIG.document_root
+rsync_delete   = CONFIG.rsync_delete
+rsync_args     = CONFIG.rsync_args
+deploy_default = CONFIG.deploy_default
 
 # This will be configured for you when you run config_deploy
-deploy_branch  = "gh-pages"
+deploy_branch  = CONFIG.deploy_branch
 
-## -- Misc Configs -- ##
+## -- Directories -- ##
 
-public_dir      = "public"      # compiled site directory for local previewing
-source_dir      = "source"      # source file directory
-blog_index_dir  = 'source'      # directory for your blog's index page (if you put your index in source/blog/index.html, set this to 'source/blog')
-deploy_dir      = "_deploy"     # deploy directory (for Github pages deployment)
-stash_dir       = "_stash"      # directory to stash posts for speedy generation
-posts_dir       = "_posts"      # directory for blog files
-themes_dir      = ".themes"     # directory for theme files (currently unused in Octostrap)
-starter_dir    = ".starterpack" # directory where starter layouts/includes/stylesheets/js are stored
-new_post_ext    = "md"          # default new post file extension when using the new_post task
-new_page_ext    = "md"          # default new page file extension when using the new_page task
-server_port     = "4000"        # port for preview server eg. localhost:4000
+public_dir      = CONFIG.public_dir
+source_dir      = CONFIG.source_dir
+blog_index_dir  = CONFIG.blog_index_dir
+deploy_dir      = CONFIG.deploy_dir
+stash_dir       = CONFIG.stash_dir
+posts_dir       = CONFIG.posts_dir
+themes_dir      = CONFIG.themes_dir
+starter_dir     = CONFIG.starter_dir
+new_post_ext    = CONFIG.new_post_ext
+new_page_ext    = CONFIG.new_page_ext
+server_port     = CONFIG.server_port
 
+# Import all .rake files from rakes/
+Dir.glob('_rakes/*.rake').each { |rakefile| import rakefile }
 
 #########################
 # Managing Octostrap
