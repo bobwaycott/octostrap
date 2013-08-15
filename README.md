@@ -1,3 +1,19 @@
+# Contents
+
+- [What is Octostrap](#what-is-octostrap)
+- [Bootstrap v2 and v3 Supported](#bootstrap-v2-and-v3-supported)
+- [Octostrap Demo](#immediate-gratification-for-the-internet-generation)
+- [The Impatient Guide to Getting Started](#the-impatient-guide-to-getting-started)
+- [The Complete Guide to Getting Started](#the-complete-guide-to-getting-started)
+- [Full Example: What Does Setup Look Like?](#full-example-what-does-setup-look-like)
+- [Github Pages: Setup being super helpful](#github-pages-setup-being-super-helpful)
+- [Additional Documentation](#additional-documentation)
+- [Stuff to Do](#stuff-to-do)
+- [What's Missing](#whats-missing)
+- [Contributing](#contributing)
+- [License](#license)
+
+
 ## What is Octostrap?
 
 Octostrap is [Octopress](http://octopress.org) blogging at its finest. And by finest, that means [Bootstrap](http://getbootstrap.com).
