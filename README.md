@@ -1,6 +1,8 @@
-# Current Status
+# Current Status &mdash; READ THIS
 
-**IMPORTANT: Currently breaking in crazy ways cos some heavy refactoring is happening.**
+###IMPORTANT:
+**Currently breaking in crazy ways cos some heavy refactoring is happening.**
+
 We advise not cloning until you see this message disappear.
 
 **Estimated Resolution:**
