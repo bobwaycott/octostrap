@@ -96,7 +96,7 @@ $ ruby --version
 ruby 1.9.3-p194
 ```
 
-Not what you see? Then you'll need to fix that. Check out the [rbenv or rvm section](#ruby-rbenv-or-rvm) before continuing.
+Not what you see? Then you'll need to fix that. Check out the [rbenv or rvm section](#rbenv-or-rvm) before continuing.
 
 Okay, you should have Ruby 1.9.3 installed by now. Time to install dependencies:
 
