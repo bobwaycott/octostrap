@@ -437,10 +437,11 @@ task :set_root_dir, :dir do |t, args|
     else
       dir = "/" + args.dir.sub(/(\/*)(.+)/, "\\2").sub(/\/$/, '');
     end
-    rakefile = IO.read(__FILE__)
-    rakefile.sub!(/public_dir(\s*)=(\s*)(["'])[\w\-\/]*["']/, "public_dir\\1=\\2\\3public#{dir}\\3")
-    File.open(__FILE__, 'w') do |f|
-      f.write rakefile
+    conf_file = '_rakes/rakes.config.yml'
+    conf = IO.read(conf_file)
+    conf.sub!(/public_dir(\s*):(\s*)(["'])[\w\-\/]*["']/, "public_dir\\1:\\2\\3public#{dir}\\3")
+    File.open(conf_file, 'w') do |f|
+      f.write conf
     end
     compass_config = IO.read('config.rb')
     compass_config.sub!(/http_path(\s*)=(\s*)(["'])[\w\-\/]*["']/, "http_path\\1=\\2\\3#{dir}/\\3")
