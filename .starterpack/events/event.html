@@ -1,0 +1,28 @@
+---
+layout: page
+---
+
+<h1>{{ page.event.title }}</h1>
+<h2><span class="text-muted">{{ page.location.name }}</span></h2>
+<h3><span class="text-muted">{{ page.location.city }}, {{ page.location.state }}</span></h3>
+
+<h3>When</h3>
+<p>
+  <strong>Date:</strong> {{ page.event.date }}<br>
+  <strong>Time:</strong> {{ page.event.time }}
+</p>
+
+<h3>Where</h3>
+<p>
+  {{ page.location.address }}<br>
+  {{ page.location.city}}, {{ page.location.state }} {{ page.location.zip }}
+</p>
+
+<h3>Contact Info</h3>
+<p>
+  <strong>Name:</strong> {{ page.event.contact.name }}<br>
+  <strong>Email:</strong> {{ page.event.contact.name }}<br>
+  <strong>Facebook:</strong> <a href="{{ page.event.contact.facebook }}">Click here</a><br>
+  <strong>Twitter:</strong> <a href="{{ page.event.contact.twitter }}">Click here</a><br>
+  <strong>Telephone:</strong> {{ page.event.contact.telephone }}
+</p>
