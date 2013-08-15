@@ -7,7 +7,6 @@ desc "Octostrap ONLY: do not use; for internal use only; syncs starterpack files
 task :prep do
   cp "./Rakefile", "#{starter_dir}/Rakefile.example"
   cp "./config.rb", "#{starter_dir}/config.rb.example"
-  cp "./_config.yml", "#{starter_dir}/config.yml.example"
 end
 
 desc "DESTRUCTIVE: returns Octostrap to default state"
