@@ -52,7 +52,16 @@ task :setup, :skip_github do |t, args|
   cp "#{starter_dir}/config.yml.example", "./_config.yml"
   mkdir_p public_dir
 
-  puts "## StarterPack copied. You can now `rake preview` and see your Octostrap site."
+  puts "## StarterPack copied. You can now `rake preview` and see your Octostrap site when setup is complete."
+
+  puts "\nOctostrap includes Event functionality that can now be included"
+  puts "  Note: This is intended for campaign/political action sites that need to organize protests/events"
+  if ask("\nWould you like to setup Octostrap Events?", ['y', 'n']) == 'y'
+    puts "\nStarting Events setup ...\n"
+    Rake::Task["setup_events"].invoke
+  else
+    puts "Skipping Events setup"
+  end
 
   # maybe do takeover
   if args.skip_github
