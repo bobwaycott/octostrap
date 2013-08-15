@@ -176,7 +176,7 @@ task :setup_github_pages, :repo do |t, args|
     system "git commit -m \"Octostrap init\""
     system "git branch -m gh-pages" unless branch == 'master'
     system "git remote add origin #{repo_url}"
-    rakefile = IO.read(__FILE__)
+    rakefile = IO.read('_rakes/rakes.config.yml')
     rakefile.sub!(/deploy_branch:(\s*)(["'])[\w-]*["']/, "deploy_branch:\\2\\3#{branch}\\3")
     rakefile.sub!(/deploy_default:(\s*)(["'])[\w-]*["']/, "deploy_default:\\2\\3push\\3")
     File.open(__FILE__, 'w') do |f|
