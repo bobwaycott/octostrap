@@ -86,21 +86,6 @@ task :setup, :skip_github do |t, args|
   end
 end
 
-desc "Octostrap ONLY: do not use; for internal use only; syncs starterpack files prior to git push"
-task :prep do
-  cp "./Rakefile", "#{starter_dir}/Rakefile.example"
-  cp "./config.rb", "#{starter_dir}/config.rb.example"
-end
-
-desc "DESTRUCTIVE: returns Octostrap to default state"
-task :reset do
-  unless ask("DESTRUCTION AHEAD! Proceeding will delete your site. Are you sure?", ['y', 'n']) == 'n'
-    rm_rf ["#{source_dir}", "#{public_dir}", "./_config.yml"]
-    cp "#{starter_dir}/Rakefile.example", "./Rakefile"
-    cp "#{starter_dir}/config.rb.example", "./config.rb"
-  end
-end
-
 desc "Take ownership of your Octostrap site: updates git settings to set Octostrap as upstream and your repo as origin"
 task :takeover, :repo do |t, args|
   if args.repo
