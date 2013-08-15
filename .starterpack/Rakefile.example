@@ -40,7 +40,7 @@ Dir.glob('_rakes/*.rake').each { |rakefile| import rakefile }
 #########################
 
 desc "Initial setup for Octostrap: copies source/ starting point; prompts for setting Github repo and Github Pages"
-task :setup, :skip_github do |t, args|
+task :setup, :no_prompt do |t, args|
   if File.directory?(source_dir)
     abort("rake aborted!") if ask("Octostrap is already setup! Proceeding will overwrite existing files. Are you sure?", ['y', 'n']) == 'n'
   end
@@ -54,17 +54,19 @@ task :setup, :skip_github do |t, args|
 
   puts "## StarterPack copied. You can now `rake preview` and see your Octostrap site when setup is complete."
 
-  puts "\nOctostrap includes Event functionality that can now be included"
-  puts "  Note: This is intended for campaign/political action sites that need to organize protests/events"
-  if ask("\nWould you like to setup Octostrap Events?", ['y', 'n']) == 'y'
-    puts "\nStarting Events setup ...\n"
-    Rake::Task["setup_events"].invoke
+  if args.no_prompt
+    puts "\nSkipping Events setup"
   else
-    puts "Skipping Events setup"
+    puts "\nOctostrap includes Event functionality that can now be included"
+    puts "  Note: This is intended for campaign/political action sites that need to organize protests/events"
+    if ask("\nWould you like to setup Octostrap Events?", ['y', 'n']) == 'y'
+      puts "\nStarting Events setup ...\n"
+      Rake::Task["setup_events"].invoke
+    end
   end
 
   # maybe do takeover
-  if args.skip_github
+  if args.no_prompt
     puts "\nSkipping Github setup"
   else
     repo_url = nil
