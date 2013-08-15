@@ -1,13 +1,3 @@
-# Current Status &mdash; READ THIS
-
-###IMPORTANT:
-**Currently breaking in crazy ways cos some heavy refactoring is happening.**
-
-We advise not cloning until you see this message disappear.
-
-**Estimated Resolution:**
-Should be sometime 2013-08-15, afternoon-evening, Eastern time.
-
 ## What is Octostrap?
 
 Octostrap is [Octopress](http://octopress.org) blogging at its finest. And by finest, that means [Bootstrap](http://getbootstrap.com).
