@@ -167,6 +167,17 @@ task :setup_github_pages, :repo do |t, args|
   File.open('_config.yml', 'w') do |f|
     f.write jekyll_config
   end
+
+  # update config
+  conf_file = '_rakes/rakes.config.yml'
+  conf = IO.read(conf_file)
+  conf.sub!(/deploy_branch:(\s*)(["'])[\w-]*["']/, "deploy_branch: \"#{branch}\"")
+  conf.sub!(/deploy_default:(\s*)(["'])[\w-]*["']/, "deploy_default: \"push\"")
+  File.open(conf_file, 'w') do |f|
+    f.write conf
+  end
+
+  # setup deploy dir + branch
   rm_rf deploy_dir
   mkdir deploy_dir
   cd "#{deploy_dir}" do
@@ -176,12 +187,6 @@ task :setup_github_pages, :repo do |t, args|
     system "git commit -m \"Octostrap init\""
     system "git branch -m gh-pages" unless branch == 'master'
     system "git remote add origin #{repo_url}"
-    rakefile = IO.read('_rakes/rakes.config.yml')
-    rakefile.sub!(/deploy_branch:(\s*)(["'])[\w-]*["']/, "deploy_branch:\\2\\3#{branch}\\3")
-    rakefile.sub!(/deploy_default:(\s*)(["'])[\w-]*["']/, "deploy_default:\\2\\3push\\3")
-    File.open(__FILE__, 'w') do |f|
-      f.write rakefile
-    end
   end
   puts "\n---\n## Success! Now you can deploy to #{url} with `rake gen_deploy` ##"
 end
