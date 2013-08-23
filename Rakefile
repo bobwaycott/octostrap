@@ -29,15 +29,16 @@ deploy_default = DEPLOY.deploy_default
 deploy_branch  = DEPLOY.deploy_branch
 
 ## -- Directories -- ##
-config_dir      = DIRS.config_dir
 starter_dir     = DIRS.starter_dir
+config_dir      = DIRS.config_dir
 public_dir      = DIRS.public_dir
 source_dir      = DIRS.source_dir
 blog_index_dir  = DIRS.blog_index_dir
 deploy_dir      = DIRS.deploy_dir
 stash_dir       = DIRS.stash_dir
 posts_dir       = DIRS.posts_dir
-themes_dir      = DIRS.themes_dir
+data_dir        = DIRS.data_dir
+events_dir      = DIRS.events_dir
 new_post_ext    = DIRS.new_post_ext
 new_page_ext    = DIRS.new_page_ext
 server_port     = DIRS.server_port
@@ -182,7 +183,7 @@ task :setup_github_pages, :repo do |t, args|
   end
 
   # update config
-  conf_file = '_rakes/rakes.config.yml'
+  conf_file = 'config/config.yml'
   conf = IO.read(conf_file)
   conf.sub!(/deploy_branch:(\s*)(["'])[\w-]*["']/, "deploy_branch: \"#{branch}\"")
   conf.sub!(/deploy_default:(\s*)(["'])[\w-]*["']/, "deploy_default: \"push\"")
@@ -448,17 +449,17 @@ task :set_root_dir, :dir do |t, args|
     else
       dir = "/" + args.dir.sub(/(\/*)(.+)/, "\\2").sub(/\/$/, '');
     end
-    conf_file = '_rakes/rakes.config.yml'
+    conf_file = 'config/config.yml'
     conf = IO.read(conf_file)
     conf.sub!(/public_dir(\s*):(\s*)(["'])[\w\-\/]*["']/, "public_dir\\1:\\2\\3public#{dir}\\3")
     File.open(conf_file, 'w') do |f|
       f.write conf
     end
     compass_config = IO.read('config.rb')
-    compass_config.sub!(/http_path(\s*)=(\s*)(["'])[\w\-\/]*["']/, "http_path\\1=\\2\\3#{dir}/\\3")
-    compass_config.sub!(/http_images_path(\s*)=(\s*)(["'])[\w\-\/]*["']/, "http_images_path\\1=\\2\\3#{dir}/images\\3")
-    compass_config.sub!(/http_fonts_path(\s*)=(\s*)(["'])[\w\-\/]*["']/, "http_fonts_path\\1=\\2\\3#{dir}/fonts\\3")
-    compass_config.sub!(/css_dir(\s*)=(\s*)(["'])[\w\-\/]*["']/, "css_dir\\1=\\2\\3public#{dir}/stylesheets\\3")
+    compass_config.sub!(/http_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_path\\1:\\2\\3#{dir}/\\3")
+    compass_config.sub!(/http_images_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_images_path\\1:\\2\\3#{dir}/images\\3")
+    compass_config.sub!(/http_fonts_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_fonts_path\\1:\\2\\3#{dir}/fonts\\3")
+    compass_config.sub!(/css_dir(\s*):(\s*)(["'])[\w\-\/]*["']/, "css_dir\\1:\\2\\3public#{dir}/stylesheets\\3")
     File.open('config.rb', 'w') do |f|
       f.write compass_config
     end

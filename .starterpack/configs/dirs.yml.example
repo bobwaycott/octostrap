@@ -11,7 +11,6 @@ blog_index_dir: "source"    # directory for your blog's index page (if you put y
 deploy_dir: "_deploy"       # deploy directory (for Github pages deployment)
 stash_dir : "_stash"        # directory to stash posts for speedy generation
 posts_dir : "_posts"        # directory for blog files
-themes_dir: ".themes"       # directory for theme files (currently unused in Octostrap)
 data_dir: "data"            # directory for data fixtures (currently used for events)
 event_dir: "events"         # directory for generating events
 new_post_ext: "md"          # default new post file extension when using the new_post task
