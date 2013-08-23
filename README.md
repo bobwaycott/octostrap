@@ -36,7 +36,7 @@ Okay, here's the fun part.
 
 ## The Impatient Guide to Getting Started
 
-### Assumptions: 
+### Assumptions:
 
 The *Impatient Guide to Getting Started* assumes the following:
 
@@ -101,7 +101,7 @@ $ git clone git@github.com:bobwaycott/octostrap.git your_project_dir
 $ cd your_project_dir
 ```
 
-Alright, Octostrap cloned and we're in the project directory. 
+Alright, Octostrap cloned and we're in the project directory.
 
 ### Install Dependencies
 
@@ -162,10 +162,11 @@ Shouldn't matter. You can probably do just fine without either if you don't do a
 $ rake setup
 
 ## Copying StarterPack into ./source ...
-mkdir -p source
+mkdir -p source data config public
 cp -r .starterpack/source/. source
-cp .starterpack/config.yml.example ./_config.yml
-mkdir -p public
+cp .starterpack/configs/config.yml.example config/config.yml
+cp .starterpack/configs/dirs.yml.example config/dirs.yml
+cp .starterpack/configs/deploy.yml.example config/deploy.yml
 ## StarterPack copied. You can now `rake preview` and see your Octostrap site when setup is complete.
 
 Octostrap includes Event functionality that can now be included
@@ -175,8 +176,8 @@ Would you like to setup Octostrap Events? [y/n] y
 
 Starting Events setup ...
 cp -r .starterpack/events/. source/_layouts/
-mkdir -p .data
-cp -r .starterpack/data/. .data
+mkdir -p data
+cp -r .starterpack/data/. data
 
 Events setup complete!
 
@@ -187,18 +188,18 @@ Enter the read/write url for your repository
 (For example, 'git@github.com:your_username/your_repo.git')
            or 'https://github.com/your_username/your_repo.git')
 
-Repository url: git@github.com:username/repo_name.git
+Repository url: git@github.com:your_username/your_repo.git
 
-Altering git config to use git@github.com:username/repo_name.git as origin...
+Altering git config to use git@github.com:your_username/your_repo.git as origin...
 
 Renaming remote origin to octostrap
-Added remote git@github.com:username/repo_name.git as origin
+Added remote git@github.com:your_username/your_repo.git as origin
 Set origin as default remote
 
 I can go ahead and push this to origin if you'd like
-NOTE: You should probably only do this with a bare repository and an internet connection
+NOTE: You should only do this with a bare repository and an internet connection
 
-Shall I push to your repo? (y/n) y
+Shall I push to your repo? [y/n] y
 
 Pushing to your repo ...
 
@@ -219,19 +220,19 @@ Would you like to proceed with Github Pages setup? [y/n] y
 Starting Github Pages setup ...
 
 rm -rf public
-mkdir -p public/repo_name
-## Site's root directory is now '/repo_name' ##
+mkdir -p public/your_repo
+## Site's root directory is now '/your_repo' ##
 rm -rf _deploy
 mkdir _deploy
 cd _deploy
-Initialized empty Git repository in /path/to/repo_name/_deploy/.git/
-[master (root-commit) 1fdca24] Octostrap init
+Initialized empty Git repository in /Users/bob/dev/github/quick_test/_deploy/.git/
+[master (root-commit) 5bbf570] Octostrap init
  1 file changed, 1 insertion(+)
  create mode 100644 index.html
 cd -
 
 ---
-## Success! Now you can deploy to http://username.github.io/repo_name with `rake gen_deploy` ##
+## Success! Now you can deploy to http://your_username.github.io/your_repo with `rake gen_deploy` ##
 ```
 
 
