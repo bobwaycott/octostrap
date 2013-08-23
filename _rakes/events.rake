@@ -1,9 +1,9 @@
 require 'json'
 
-source_dir  = CONFIG.source_dir
-starter_dir = CONFIG.starter_dir
-event_dir   = CONFIG.event_dir
-data_dir    = CONFIG.data_dir
+source_dir  = DIRS.source_dir
+starter_dir = DIRS.starter_dir
+event_dir   = DIRS.event_dir
+data_dir    = DIRS.data_dir
 
 # usage rake setup_events
 desc "Setup Event functionality"
