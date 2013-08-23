@@ -60,9 +60,9 @@ task :setup, :no_prompt do |t, args|
 
   mkdir_p [source_dir, data_dir, config_dir, public_dir]
   cp_r "#{starter_dir}/source/.", source_dir
-  cp "#{starter_dir}/config.yml.example", "config/config.yml"
-  cp "#{starter_dir}/dirs.yml.example", "config/dirs.yml"
-  cp "#{starter_dir}/deploy.yml.example", "config/deploy.yml"
+  cp "#{starter_dir}/configs/config.yml.example", "config/config.yml"
+  cp "#{starter_dir}/configs/dirs.yml.example", "config/dirs.yml"
+  cp "#{starter_dir}/configs/deploy.yml.example", "config/deploy.yml"
 
   puts "## StarterPack copied. You can now `rake preview` and see your Octostrap site when setup is complete."
 
