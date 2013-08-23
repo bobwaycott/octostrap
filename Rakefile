@@ -4,33 +4,33 @@ require 'stringex'
 require 'ostruct'
 require 'yaml'
 
-CONFIG = OpenStruct.new(YAML.load_file('_rakes/rakes.config.yml'))
+DIRS = OpenStruct.new(YAML.load_file('config/dirs.yml'))
+DEPLOY = OpenStruct.new(YAML.load_file('config/deploy.yml'))
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
-ssh_user       = CONFIG.ssh_user
-ssh_port       = CONFIG.ssh_port
-document_root  = CONFIG.document_root
-rsync_delete   = CONFIG.rsync_delete
-rsync_args     = CONFIG.rsync_args
-deploy_default = CONFIG.deploy_default
+ssh_user       = DEPLOY.ssh_user
+ssh_port       = DEPLOY.ssh_port
+document_root  = DEPLOY.document_root
+rsync_delete   = DEPLOY.rsync_delete
+rsync_args     = DEPLOY.rsync_args
+deploy_default = DEPLOY.deploy_default
 
 # This will be configured for you when you run config_deploy
-deploy_branch  = CONFIG.deploy_branch
+deploy_branch  = DEPLOY.deploy_branch
 
 ## -- Directories -- ##
-
-public_dir      = CONFIG.public_dir
-source_dir      = CONFIG.source_dir
-blog_index_dir  = CONFIG.blog_index_dir
-deploy_dir      = CONFIG.deploy_dir
-stash_dir       = CONFIG.stash_dir
-posts_dir       = CONFIG.posts_dir
-themes_dir      = CONFIG.themes_dir
-starter_dir     = CONFIG.starter_dir
-new_post_ext    = CONFIG.new_post_ext
-new_page_ext    = CONFIG.new_page_ext
-server_port     = CONFIG.server_port
+public_dir      = DIRS.public_dir
+source_dir      = DIRS.source_dir
+blog_index_dir  = DIRS.blog_index_dir
+deploy_dir      = DIRS.deploy_dir
+stash_dir       = DIRS.stash_dir
+posts_dir       = DIRS.posts_dir
+themes_dir      = DIRS.themes_dir
+starter_dir     = DIRS.starter_dir
+new_post_ext    = DIRS.new_post_ext
+new_page_ext    = DIRS.new_page_ext
+server_port     = DIRS.server_port
 
 # Import all .rake files from rakes/
 Dir.glob('_rakes/*.rake').each { |rakefile| import rakefile }
@@ -47,10 +47,11 @@ task :setup, :no_prompt do |t, args|
   # copy StarterPack into project folder
   puts "## Copying StarterPack into ./#{source_dir} ..."
 
-  mkdir_p source_dir
+  mkdir_p [source_dir, data_dir, 'config', public_dir]
   cp_r "#{starter_dir}/source/.", source_dir
-  cp "#{starter_dir}/config.yml.example", "./_config.yml"
-  mkdir_p public_dir
+  cp "#{starter_dir}/config.yml.example", "config/config.yml"
+  cp "#{starter_dir}/dirs.yml.example", "config/dirs.yml"
+  cp "#{starter_dir}/deploy.yml.example", "config/deploy.yml"
 
   puts "## StarterPack copied. You can now `rake preview` and see your Octostrap site when setup is complete."
 
@@ -164,9 +165,9 @@ task :setup_github_pages, :repo do |t, args|
   end
   url = "http://#{user}.github.io"
   url += "/#{project}" unless project == ''
-  jekyll_config = IO.read('_config.yml')
+  jekyll_config = IO.read('config/config.yml')
   jekyll_config.sub!(/^url:.*$/, "url: #{url}")
-  File.open('_config.yml', 'w') do |f|
+  File.open('config/config.yml', 'w') do |f|
     f.write jekyll_config
   end
 
@@ -202,7 +203,7 @@ task :generate do
   raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   puts "## Generating Site with Jekyll"
   system "compass compile --css-dir #{source_dir}/stylesheets"
-  system "jekyll"
+  system "jekyll --config config/config.yml"
 end
 
 desc "Watch the site and regenerate when it changes"
@@ -210,7 +211,7 @@ task :watch do
   raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   puts "Starting to watch source with Jekyll and Compass."
   system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
-  jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --auto")
+  jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --config config/config.yml --auto")
   compassPid = Process.spawn("compass watch")
 
   trap("INT") {
@@ -228,7 +229,7 @@ task :preview, :port do |t, args|
     server_port = args.port
   end
   puts "Starting to watch source with Jekyll and Compass. Starting Rack on port #{server_port}"
-  jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --auto")
+  jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --config config/config.yml --auto")
   compassPid = Process.spawn("compass watch")
   rackupPid = Process.spawn("rackup --port #{server_port}")
 
@@ -451,11 +452,11 @@ task :set_root_dir, :dir do |t, args|
     File.open('config.rb', 'w') do |f|
       f.write compass_config
     end
-    jekyll_config = IO.read('_config.yml')
+    jekyll_config = IO.read('config/config.yml')
     jekyll_config.sub!(/^destination:.+$/, "destination: public#{dir}")
     jekyll_config.sub!(/^subscribe_rss:\s*\/.+$/, "subscribe_rss: #{dir}/atom.xml")
     jekyll_config.sub!(/^root:.*$/, "root: /#{dir.sub(/^\//, '')}")
-    File.open('_config.yml', 'w') do |f|
+    File.open('config/config.yml', 'w') do |f|
       f.write jekyll_config
     end
     rm_rf public_dir

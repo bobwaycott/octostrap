@@ -14,7 +14,7 @@
 # - category_links:      Outputs the list of categories as comma-separated <a> links.
 # - date_to_html_string: Outputs the post.date as formatted html, with hooks for CSS styling.
 #
-# Available _config.yml settings :
+# Available config settings :
 # - category_dir:          The subfolder to build category pages in (default is 'categories').
 # - category_title_prefix: The string used before the category name in the page title (default is
 #                          'Category: ').
