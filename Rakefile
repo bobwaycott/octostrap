@@ -188,7 +188,7 @@ task :setup_github_pages, :repo do |t, args|
   end
 
   # update config
-  conf_file = 'config/config.yml'
+  conf_file = 'config/deploy.yml'
   conf = IO.read(conf_file)
   conf.sub!(/deploy_branch:(\s*)(["'])[\w-]*["']/, "deploy_branch: \"#{branch}\"")
   conf.sub!(/deploy_default:(\s*)(["'])[\w-]*["']/, "deploy_default: \"push\"")
