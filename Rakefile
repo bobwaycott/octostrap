@@ -4,8 +4,17 @@ require 'stringex'
 require 'ostruct'
 require 'yaml'
 
-DIRS = OpenStruct.new(YAML.load_file('config/dirs.yml'))
-DEPLOY = OpenStruct.new(YAML.load_file('config/deploy.yml'))
+if File.exists?('config/dirs.yml')
+  DIRS = OpenStruct.new(YAML.load_file('config/dirs.yml'))
+else
+  DIRS = OpenStruct.new(YAML.load_file('.starterpack/configs/dirs.yml.example'))
+end
+
+if File.exists?('config/dirs.yml')
+  DEPLOY = OpenStruct.new(YAML.load_file('config/deploy.yml'))
+else
+  DEPLOY = OpenStruct.new(YAML.load_file('.starterpack/configs/deploy.yml.example'))
+end
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
@@ -20,6 +29,8 @@ deploy_default = DEPLOY.deploy_default
 deploy_branch  = DEPLOY.deploy_branch
 
 ## -- Directories -- ##
+config_dir      = DIRS.config_dir
+starter_dir     = DIRS.starter_dir
 public_dir      = DIRS.public_dir
 source_dir      = DIRS.source_dir
 blog_index_dir  = DIRS.blog_index_dir
@@ -27,7 +38,6 @@ deploy_dir      = DIRS.deploy_dir
 stash_dir       = DIRS.stash_dir
 posts_dir       = DIRS.posts_dir
 themes_dir      = DIRS.themes_dir
-starter_dir     = DIRS.starter_dir
 new_post_ext    = DIRS.new_post_ext
 new_page_ext    = DIRS.new_page_ext
 server_port     = DIRS.server_port
@@ -47,7 +57,7 @@ task :setup, :no_prompt do |t, args|
   # copy StarterPack into project folder
   puts "## Copying StarterPack into ./#{source_dir} ..."
 
-  mkdir_p [source_dir, data_dir, 'config', public_dir]
+  mkdir_p [source_dir, data_dir, config_dir, public_dir]
   cp_r "#{starter_dir}/source/.", source_dir
   cp "#{starter_dir}/config.yml.example", "config/config.yml"
   cp "#{starter_dir}/dirs.yml.example", "config/dirs.yml"
