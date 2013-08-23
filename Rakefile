@@ -214,7 +214,7 @@ task :generate do
   raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   puts "## Generating Site with Jekyll"
   system "compass compile --css-dir #{source_dir}/stylesheets"
-  system "jekyll build --config config/config.yml"
+  system "jekyll --file config/config.yml"
 end
 
 desc "Watch the site and regenerate when it changes"
@@ -222,7 +222,7 @@ task :watch do
   raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   puts "Starting to watch source with Jekyll and Compass."
   system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
-  jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll build --config config/config.yml --watch")
+  jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --file config/config.yml --auto")
   compassPid = Process.spawn("compass watch")
 
   trap("INT") {
@@ -240,7 +240,7 @@ task :preview, :port do |t, args|
     server_port = args.port
   end
   puts "Starting to watch source with Jekyll and Compass. Starting Rack on port #{server_port}"
-  jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll build --config config/config.yml --watch")
+  jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --file config/config.yml --auto")
   compassPid = Process.spawn("compass watch")
   rackupPid = Process.spawn("rackup --port #{server_port}")
 
