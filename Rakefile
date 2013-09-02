@@ -218,7 +218,7 @@ desc "Generate jekyll site"
 task :generate do
   raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   puts "## Generating Site with Jekyll"
-  system "compass compile --css-dir #{source_dir}/stylesheets"
+  # system "compass compile --css-dir #{source_dir}/stylesheets"
   system "jekyll"
 end
 
@@ -226,7 +226,7 @@ desc "Watch the site and regenerate when it changes"
 task :watch do
   raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   puts "Starting to watch source with Jekyll and Compass."
-  system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
+  # system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
   jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --auto")
   compassPid = Process.spawn("compass watch")
 
@@ -454,25 +454,24 @@ task :set_root_dir, :dir do |t, args|
     else
       dir = "/" + args.dir.sub(/(\/*)(.+)/, "\\2").sub(/\/$/, '');
     end
+    # config files
     conf_file = 'config/config.yml'
-    conf = IO.read(conf_file)
-    conf.sub!(/public_dir(\s*):(\s*)(["'])[\w\-\/]*["']/, "public_dir\\1:\\2\\3public#{dir}\\3")
-    File.open(conf_file, 'w') do |f|
-      f.write conf
+    dirs_file = 'config/dirs.yml'
+    # write changes
+    dirs_config = IO.read(dirs_file)
+    dirs_config.sub!(/public_dir(\s*):(\s*)(["'])[\w\-\/]*["']/, "public_dir\\1:\\2\\3public#{dir}\\3")
+    dirs_config.sub!(/http_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_path\\1:\\2\\3#{dir}/\\3")
+    dirs_config.sub!(/http_images_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_images_path\\1:\\2\\3#{dir}/images\\3")
+    dirs_config.sub!(/http_fonts_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_fonts_path\\1:\\2\\3#{dir}/fonts\\3")
+    dirs_config.sub!(/css_dir(\s*):(\s*)(["'])[\w\-\/]*["']/, "css_dir\\1:\\2\\3public#{dir}/stylesheets\\3")
+    File.open(dirs_file, 'w') do |f|
+      f.write dirs_config
     end
-    compass_config = IO.read('config/dirs.yml')
-    compass_config.sub!(/http_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_path\\1:\\2\\3#{dir}/\\3")
-    compass_config.sub!(/http_images_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_images_path\\1:\\2\\3#{dir}/images\\3")
-    compass_config.sub!(/http_fonts_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_fonts_path\\1:\\2\\3#{dir}/fonts\\3")
-    compass_config.sub!(/css_dir(\s*):(\s*)(["'])[\w\-\/]*["']/, "css_dir\\1:\\2\\3public#{dir}/stylesheets\\3")
-    File.open('config/dirs.yml', 'w') do |f|
-      f.write compass_config
-    end
-    jekyll_config = IO.read('config/config.yml')
+    jekyll_config = IO.read(conf_file)
     jekyll_config.sub!(/^destination:.+$/, "destination: public#{dir}")
     jekyll_config.sub!(/^subscribe_rss:\s*\/.+$/, "subscribe_rss: #{dir}/atom.xml")
     jekyll_config.sub!(/^root:.*$/, "root: /#{dir.sub(/^\//, '')}")
-    File.open('config/config.yml', 'w') do |f|
+    File.open(conf_file, 'w') do |f|
       f.write jekyll_config
     end
     rm_rf public_dir
