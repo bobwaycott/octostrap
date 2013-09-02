@@ -4,33 +4,44 @@ require 'stringex'
 require 'ostruct'
 require 'yaml'
 
-CONFIG = OpenStruct.new(YAML.load_file('_rakes/rakes.config.yml'))
+if File.exists?('config/dirs.yml')
+  DIRS = OpenStruct.new(YAML.load_file('config/dirs.yml'))
+else
+  DIRS = OpenStruct.new(YAML.load_file('.starterpack/configs/dirs.yml.example'))
+end
+
+if File.exists?('config/dirs.yml')
+  DEPLOY = OpenStruct.new(YAML.load_file('config/deploy.yml'))
+else
+  DEPLOY = OpenStruct.new(YAML.load_file('.starterpack/configs/deploy.yml.example'))
+end
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
-ssh_user       = CONFIG.ssh_user
-ssh_port       = CONFIG.ssh_port
-document_root  = CONFIG.document_root
-rsync_delete   = CONFIG.rsync_delete
-rsync_args     = CONFIG.rsync_args
-deploy_default = CONFIG.deploy_default
+ssh_user       = DEPLOY.ssh_user
+ssh_port       = DEPLOY.ssh_port
+document_root  = DEPLOY.document_root
+rsync_delete   = DEPLOY.rsync_delete
+rsync_args     = DEPLOY.rsync_args
+deploy_default = DEPLOY.deploy_default
 
 # This will be configured for you when you run config_deploy
-deploy_branch  = CONFIG.deploy_branch
+deploy_branch  = DEPLOY.deploy_branch
 
 ## -- Directories -- ##
-
-public_dir      = CONFIG.public_dir
-source_dir      = CONFIG.source_dir
-blog_index_dir  = CONFIG.blog_index_dir
-deploy_dir      = CONFIG.deploy_dir
-stash_dir       = CONFIG.stash_dir
-posts_dir       = CONFIG.posts_dir
-themes_dir      = CONFIG.themes_dir
-starter_dir     = CONFIG.starter_dir
-new_post_ext    = CONFIG.new_post_ext
-new_page_ext    = CONFIG.new_page_ext
-server_port     = CONFIG.server_port
+starter_dir     = DIRS.starter_dir
+config_dir      = DIRS.config_dir
+public_dir      = DIRS.public_dir
+source_dir      = DIRS.source_dir
+blog_index_dir  = DIRS.blog_index_dir
+deploy_dir      = DIRS.deploy_dir
+stash_dir       = DIRS.stash_dir
+posts_dir       = DIRS.posts_dir
+data_dir        = DIRS.data_dir
+events_dir      = DIRS.events_dir
+new_post_ext    = DIRS.new_post_ext
+new_page_ext    = DIRS.new_page_ext
+server_port     = DIRS.server_port
 
 # Import all .rake files from rakes/
 Dir.glob('_rakes/*.rake').each { |rakefile| import rakefile }
@@ -47,10 +58,16 @@ task :setup, :no_prompt do |t, args|
   # copy StarterPack into project folder
   puts "## Copying StarterPack into ./#{source_dir} ..."
 
-  mkdir_p source_dir
+  mkdir_p [source_dir, data_dir, config_dir, public_dir]
   cp_r "#{starter_dir}/source/.", source_dir
-  cp "#{starter_dir}/config.yml.example", "./_config.yml"
-  mkdir_p public_dir
+  cp "#{starter_dir}/configs/config.yml.example", "#{config_dir}/config.yml"
+  cp "#{starter_dir}/configs/dirs.yml.example", "#{config_dir}/dirs.yml"
+  cp "#{starter_dir}/configs/deploy.yml.example", "#{config_dir}/deploy.yml"
+  begin
+    symlink("#{config_dir}/config.yml", './_config.yml')
+  rescue NotImplemented
+    cp "#{config_dir}/config.yml", "./_config.yml"
+  end
 
   puts "## StarterPack copied. You can now `rake preview` and see your Octostrap site when setup is complete."
 
@@ -164,14 +181,14 @@ task :setup_github_pages, :repo do |t, args|
   end
   url = "http://#{user}.github.io"
   url += "/#{project}" unless project == ''
-  jekyll_config = IO.read('_config.yml')
+  jekyll_config = IO.read('config/config.yml')
   jekyll_config.sub!(/^url:.*$/, "url: #{url}")
-  File.open('_config.yml', 'w') do |f|
+  File.open('config/config.yml', 'w') do |f|
     f.write jekyll_config
   end
 
   # update config
-  conf_file = '_rakes/rakes.config.yml'
+  conf_file = 'config/deploy.yml'
   conf = IO.read(conf_file)
   conf.sub!(/deploy_branch:(\s*)(["'])[\w-]*["']/, "deploy_branch: \"#{branch}\"")
   conf.sub!(/deploy_default:(\s*)(["'])[\w-]*["']/, "deploy_default: \"push\"")
@@ -201,7 +218,7 @@ desc "Generate jekyll site"
 task :generate do
   raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   puts "## Generating Site with Jekyll"
-  system "compass compile --css-dir #{source_dir}/stylesheets"
+  # system "compass compile --css-dir #{source_dir}/stylesheets"
   system "jekyll"
 end
 
@@ -209,7 +226,7 @@ desc "Watch the site and regenerate when it changes"
 task :watch do
   raise "\n####\nYou haven't set anything up yet.\nFirst run `rake setup` to set up Octostrap.\n####" unless File.directory?(source_dir)
   puts "Starting to watch source with Jekyll and Compass."
-  system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
+  # system "compass compile --css-dir #{source_dir}/stylesheets" unless File.exist?("#{source_dir}/stylesheets/screen.css")
   jekyllPid = Process.spawn({"OCTOPRESS_ENV"=>"preview"}, "jekyll --auto")
   compassPid = Process.spawn("compass watch")
 
@@ -437,24 +454,24 @@ task :set_root_dir, :dir do |t, args|
     else
       dir = "/" + args.dir.sub(/(\/*)(.+)/, "\\2").sub(/\/$/, '');
     end
-    rakefile = IO.read(__FILE__)
-    rakefile.sub!(/public_dir(\s*)=(\s*)(["'])[\w\-\/]*["']/, "public_dir\\1=\\2\\3public#{dir}\\3")
-    File.open(__FILE__, 'w') do |f|
-      f.write rakefile
+    # config files
+    conf_file = 'config/config.yml'
+    dirs_file = 'config/dirs.yml'
+    # write changes
+    dirs_config = IO.read(dirs_file)
+    dirs_config.sub!(/public_dir(\s*):(\s*)(["'])[\w\-\/]*["']/, "public_dir\\1:\\2\\3public#{dir}\\3")
+    dirs_config.sub!(/http_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_path\\1:\\2\\3#{dir}/\\3")
+    dirs_config.sub!(/http_images_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_images_path\\1:\\2\\3#{dir}/images\\3")
+    dirs_config.sub!(/http_fonts_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_fonts_path\\1:\\2\\3#{dir}/fonts\\3")
+    dirs_config.sub!(/css_dir(\s*):(\s*)(["'])[\w\-\/]*["']/, "css_dir\\1:\\2\\3public#{dir}/stylesheets\\3")
+    File.open(dirs_file, 'w') do |f|
+      f.write dirs_config
     end
-    compass_config = IO.read('config.rb')
-    compass_config.sub!(/http_path(\s*)=(\s*)(["'])[\w\-\/]*["']/, "http_path\\1=\\2\\3#{dir}/\\3")
-    compass_config.sub!(/http_images_path(\s*)=(\s*)(["'])[\w\-\/]*["']/, "http_images_path\\1=\\2\\3#{dir}/images\\3")
-    compass_config.sub!(/http_fonts_path(\s*)=(\s*)(["'])[\w\-\/]*["']/, "http_fonts_path\\1=\\2\\3#{dir}/fonts\\3")
-    compass_config.sub!(/css_dir(\s*)=(\s*)(["'])[\w\-\/]*["']/, "css_dir\\1=\\2\\3public#{dir}/stylesheets\\3")
-    File.open('config.rb', 'w') do |f|
-      f.write compass_config
-    end
-    jekyll_config = IO.read('_config.yml')
+    jekyll_config = IO.read(conf_file)
     jekyll_config.sub!(/^destination:.+$/, "destination: public#{dir}")
     jekyll_config.sub!(/^subscribe_rss:\s*\/.+$/, "subscribe_rss: #{dir}/atom.xml")
     jekyll_config.sub!(/^root:.*$/, "root: /#{dir.sub(/^\//, '')}")
-    File.open('_config.yml', 'w') do |f|
+    File.open(conf_file, 'w') do |f|
       f.write jekyll_config
     end
     rm_rf public_dir
