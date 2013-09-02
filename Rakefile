@@ -460,12 +460,12 @@ task :set_root_dir, :dir do |t, args|
     File.open(conf_file, 'w') do |f|
       f.write conf
     end
-    compass_config = IO.read('config.rb')
+    compass_config = IO.read('config/dirs.yml')
     compass_config.sub!(/http_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_path\\1:\\2\\3#{dir}/\\3")
     compass_config.sub!(/http_images_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_images_path\\1:\\2\\3#{dir}/images\\3")
     compass_config.sub!(/http_fonts_path(\s*):(\s*)(["'])[\w\-\/]*["']/, "http_fonts_path\\1:\\2\\3#{dir}/fonts\\3")
     compass_config.sub!(/css_dir(\s*):(\s*)(["'])[\w\-\/]*["']/, "css_dir\\1:\\2\\3public#{dir}/stylesheets\\3")
-    File.open('config.rb', 'w') do |f|
+    File.open('config/dirs.yml', 'w') do |f|
       f.write compass_config
     end
     jekyll_config = IO.read('config/config.yml')
