@@ -65,7 +65,7 @@ task :setup, :no_prompt do |t, args|
   cp "#{starter_dir}/configs/deploy.yml.example", "#{config_dir}/deploy.yml"
   begin
     symlink("#{config_dir}/config.yml", './_config.yml')
-  rescue NotImplemented
+  rescue NotImplementedError
     cp "#{config_dir}/config.yml", "./_config.yml"
   end
 
